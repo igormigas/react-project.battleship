@@ -1,0 +1,29 @@
+input[type="text"],
+input[type="password"],
+input[type="submit"] {
+	padding: 12px 20px;
+	border: none;
+	background-color: #fafafa;
+
+	border-radius: 20px;
+	outline: none;
+
+	&:hover {
+		background-color: #f3f3f3;
+	}
+
+	&::placeholder {
+		color: #555;
+		font-style: italic;
+	}
+}
+
+input[type="submit"] {
+	color: white;
+	background-color: #3a3a3a;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #555;
+	}
+}

@@ -1,0 +1,46 @@
+.FacebookBar {
+	padding: 25px 0px;
+	max-height: 80px;
+	text-align: center;
+}
+
+.fbLoginButton {
+	padding: 12px 20px;
+	border: none;
+	background-color: $fbColor;
+
+	color: white;
+	font-weight: bold;
+	letter-spacing: 0.7px;
+
+	cursor: pointer;
+
+	&:hover {
+		background-color: lighten($fbColor, 10%);
+	}
+}
+
+.fbInfoBox {
+	text-align: center;
+}
+
+.fbInfoMsg {
+	line-height: 150px;
+}
+
+.fbProfile {
+	position: relative;
+	top: -50px;
+	margin: 0px auto;
+	width: 200px;
+	text-align: center;
+
+	img {
+		border: 10px solid #fff;
+		border-radius: 50%;
+	}
+
+	h3 {
+		margin: 0px;
+	}
+}

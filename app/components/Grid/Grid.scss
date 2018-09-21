@@ -1,0 +1,59 @@
+.Grid {
+	flex: 0 0 400px;
+	display: flex;
+	flex-flow: column;
+	margin-left: 30px;
+	height: 400px;
+}
+
+.Row {
+	display: flex;
+	flex: 1 1 10%;
+	flex-flow: row;
+	width: 100%;
+}
+
+.Square {
+	position: relative;
+	display: block;
+	flex: 1 1 10%;
+	border: 1px solid white;
+	background-color: #f8f8f8;
+	text-align: center;
+	line-height: 40px;
+
+	&:hover {
+		background-color: #f3f3f3;
+	}
+
+	&.label {
+		background-color: #eee;
+	}
+
+	&.default {
+
+	}
+
+	&.ship {
+		background-color: #ccc;
+	}
+
+	&.hit {
+		background-color: red;
+		img {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			width: 60%;
+			opacity: 0.75;
+		}
+	}
+
+	&.missed {
+		img {
+			width: 12px;
+			opacity: 0.75;
+		}
+	}
+}

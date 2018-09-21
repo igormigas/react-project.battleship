@@ -1,0 +1,11 @@
+.Chat {
+
+	.messages {
+		overflow-y: scroll;
+		height: 150px;
+	}
+
+	.newMessage {
+		width: 100%;
+	}
+}
