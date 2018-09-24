@@ -2,22 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Square from './Square';
+import SquareLabel from './SquareLabel';
 import database from '../../services/firebase/';
 import * as utils from '../../functions/grid';
 
 import classes from './Grid.scss';
 
 class Grid extends React.Component {
-
-	constructor(props) {
-		super(props);
-
-		this.rowSymbols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-		this.colSymbols = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-		this.workRowSymbols = ['x', ...this.rowSymbols];
-		this.workColSymbols = ['y', ...this.colSymbols];
-	}
-
 
 	getSymbolOfSquare = (row, col) => {
 		return (row == 'x' ? '' : row) + (col == 'y' ? '' : col);
@@ -43,17 +34,35 @@ class Grid extends React.Component {
 	}
 
 	createGrid = (fields) => {
-		console.log(fields)
-		return fields.forEach((row, x) => {
-			row.forEach((state, y) => {
-				<Square
-					key={utils.intToChar(x+1)+(y+1)}
-					row={x}
-					col={y}
-					state={state}
-					fireEvent={this.onFireHandler} />
+		let header = [];
+		const countRows = fields.length;
+		const countCols = fields[0].length;
+		for (let i=0; i<=countCols; i++) {
+			console.log(i>0 && i)
+			header.push(
+				<SquareLabel key={i} value={i>0?i:null} />
+			);
+		}
+		return [
+			<div key="A0" className={classes.Row}>{header}</div>,
+			fields.map((row, x) => {
+				return (
+					<div className={classes.Row} key={utils.intToChar(x+1)}>
+						<SquareLabel key={utils.intToChar(x+1)+0} value={utils.intToChar(x+1)} />
+						{row.map((state, y) => {
+							return (
+								<Square
+									key={utils.intToChar(x+1)+(y+1)}
+									row={x+1}
+									col={y+1}
+									state={state}
+									fireEvent={this.onFireHandler} />
+							);
+						})}
+					</div>
+				);
 			})
-		})
+		];
 	}
 
 	render() {

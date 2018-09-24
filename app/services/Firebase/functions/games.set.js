@@ -7,7 +7,7 @@ const functions = (database) => {
 				.then( snapshot => callback(snapshot.exists()) );
 		},
 
-		getGameData: (gameID, callback) => {
+		listenGameData: (gameID, callback) => {
 			database
 				.ref('/games/' + gameID)
 				.on('value', snapshot => callback(snapshot) );
