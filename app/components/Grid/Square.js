@@ -27,30 +27,59 @@ const square = (props) => {
 	const getClass = () => {
 		switch (props.type) {
 			case 2:
-			return 'missed';
+			return classes.missed;
 
 			case 3:
-			return 'ship';
+			return classes.ship;
 
 			case 4:
-			return 'hit';
+			return classes.hit;
 
 			default:
-			return 'default';
+			return classes.default;
 		}
 	}
 
 	const onClickHandler = () => {
-		props.fireEvent(props.row, props.col)
+		props.clickEvent(props.row, props.col)
+	}
+
+	const onMouseEnterHandler = () => {
+		props.mouseEnterEvent(props.row, props.col)
+	}
+
+	const onMouseLeaveHandler = () => {
+		props.mouseLeaveEvent()
+	}
+
+	function styles() {
+		let array = [
+			classes.Square,
+			getClass()
+		];
+		(props.hovered) && array.push(classes.hovered);
+		return array.join(' ');
 	}
 
 	return (
 		<div
-			className={classes.Square + ' ' + getClass()}
-			onClick={onClickHandler}>
+			className={styles()}
+			onClick={onClickHandler}
+			onMouseEnter={onMouseEnterHandler}
+			onMouseLeave={onMouseLeaveHandler}>
 			{getValue()}
 		</div>
 	);
 };
+
+square.propTypes = {
+	row: PropTypes.number.isRequired,
+	col: PropTypes.number.isRequired,
+	type: PropTypes.number,
+	hovered: PropTypes.bool,
+	clickEvent: PropTypes.func.isRequired,
+	mouseEnterEvent: PropTypes.func.isRequired,
+	mouseLeaveEvent: PropTypes.func.isRequired,
+}
 
 export default square;

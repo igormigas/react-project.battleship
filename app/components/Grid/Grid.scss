@@ -21,8 +21,9 @@
 	background-color: #f8f8f8;
 	text-align: center;
 	line-height: 40px;
+	cursor: pointer;
 
-	&:hover {
+	&.hovered {
 		background-color: #f3f3f3;
 	}
 

@@ -10,27 +10,32 @@ import classes from './Grid.scss';
 
 class Grid extends React.Component {
 
-	getSymbolOfSquare = (row, col) => {
-		return (row == 'x' ? '' : row) + (col == 'y' ? '' : col);
+	state = {
+		hovering: false,
+		hoverRow: null,
+		hoverCol: null,
 	}
 
-	getTypeOfSquare = (row, col, fields) => {
-		if (row == 'x' || col == 'y') {
-			return 'label';
-		} else if (!fields) {
-			return 'default';
-		} else {
-			let state = fields[row][col];
-			if (state.ship) {
-				return state.shot ? 'hit' : 'ship';
-			} else {
-				return state.shot ? 'missed' : 'default';
-			}
-		}
+	onClickHandler = (row, col) => {
+		this.props.clickEvent(this.props.player, row, col);
 	}
 
-	onFireHandler = (row, col) => {
-		//database.makeShot(this.props.gameID, this.props.turn, row, col);
+	onMouseEnterSquareHandler = (row, col) => {
+  	this.setState({
+  		hovering: true,
+  		hoverRow: row,
+  		hoverCol: col,
+  	})
+  }
+
+  onMouseLeaveSquareHandler = () => {
+  	this.setState({
+  		hovering: false
+  	})
+  }
+
+	isHovered(x, y) {
+		return this.state.hovering && x == this.state.hoverRow && y == this.state.hoverCol;
 	}
 
 	createGrid = (fields) => {
@@ -38,7 +43,6 @@ class Grid extends React.Component {
 		const countRows = fields.length;
 		const countCols = fields[0].length;
 		for (let i=0; i<=countCols; i++) {
-			console.log(i>0 && i)
 			header.push(
 				<SquareLabel key={i} value={i>0?i:null} />
 			);
@@ -49,14 +53,17 @@ class Grid extends React.Component {
 				return (
 					<div className={classes.Row} key={utils.intToChar(x+1)}>
 						<SquareLabel key={utils.intToChar(x+1)+0} value={utils.intToChar(x+1)} />
-						{row.map((state, y) => {
+						{row.map((type, y) => {
 							return (
 								<Square
 									key={utils.intToChar(x+1)+(y+1)}
 									row={x+1}
 									col={y+1}
-									state={state}
-									fireEvent={this.onFireHandler} />
+									type={type}
+									hovered={this.isHovered(x+1, y+1)}
+									clickEvent={this.onClickHandler}
+									mouseEnterEvent={this.onMouseEnterSquareHandler}
+									mouseLeaveEvent={this.onMouseLeaveSquareHandler} />
 							);
 						})}
 					</div>
@@ -66,7 +73,6 @@ class Grid extends React.Component {
 	}
 
 	render() {
-		console.log(this.props)
 		return (
 			<div className={classes.Grid}>
 					{this.createGrid(this.props.fields)}
@@ -76,7 +82,11 @@ class Grid extends React.Component {
 };
 
 Grid.propTypes = {
-	fields: PropTypes.array
+	fields: PropTypes.array,
+	active: PropTypes.bool,
+	clickEvent: PropTypes.func.isRequired,
+	mouseEnterEvent: PropTypes.func.isRequired,
+	mouseLeaveEvent: PropTypes.func.isRequired,
 }
 
 export default Grid;

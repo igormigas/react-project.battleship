@@ -2,28 +2,64 @@ const functions = (database) => {
 	return {
 		checkGameExist: (gameID, callback) => {
 			database
+				.ref(`/games/${gameID}/details`)
+				.once('value')
+				.then( snapshot => callback(snapshot) );
+		},
+
+		getGameDetails: (gameID, callback) => {
+			database
+				.ref(`/games/${gameID}/details`)
+				.once('value')
+				.then( snapshot => callback(snapshot) );
+		},
+
+		getGamePlayers: (gameID, callback) => {
+			database
+				.ref(`/games/${gameID}/details/players`)
+				.once('value')
+				.then( snapshot => callback(snapshot) );
+		},
+
+		getNewGameKey: () => {
+			const ref = database.ref('/games');
+			const key = ref.push().key;
+			return key;
+		},
+
+		createNewGame: (gameID, obj) => {
+			return database
+				.ref('/games')
+				.child(gameID)
+				.set(obj);
+		},
+
+		createOpponent: (gameID, slot, obj) => {
+			return database
+				.ref(`/games/${gameID}/details/players/${slot}`)
+				.update(obj);
+		},
+/*
+		getPlayersDetails: (gameID) => {
+			database
 				.ref('/games/' + gameID)
 				.once('value')
 				.then( snapshot => callback(snapshot.exists()) );
 		},
-
+*/
 		listenGameData: (gameID, callback) => {
 			database
 				.ref('/games/' + gameID)
 				.on('value', snapshot => callback(snapshot) );
 		},
 
-		postGameData: (obj) => {
-			const ref = database.ref('/games');
-			const key = ref.push().key;
-			ref.child(key).set(obj);
-			return key;
-		},
 
-		makeShot: (gameID, turn, row, col) => {
+
+		makeShot: (gameID, player, row, col) => {
 			const updates = {};
-			updates[`/fields/${row}/${col}/shot`] = true;
-			updates['/turn'] = turn ? 0 : 1;
+			const opponent = player ? 0 : 1;
+			updates[`/grids/${player}/fields/${row}/${col}`] = 2;
+			updates['/turn'] = opponent;
 			database
 				.ref(`/games/${gameID}`)
 				.update(updates);

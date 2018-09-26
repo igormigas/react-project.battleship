@@ -9,7 +9,6 @@ import {createNewGrid} from './initial';
 	}
 
 	export function isInteger(value, strict=false) {
-
 		return Number.isInteger(strict ? value : +value);
 	}
 

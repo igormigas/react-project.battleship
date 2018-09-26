@@ -16,17 +16,18 @@ import Error404 from './routes/Error404';
 import Login from './routes/Login';
 import Lobby from './routes/Lobby';
 import Game from './routes/Game';
+import Invite from './routes/Invite';
 
 class App extends React.Component {
 
 	render() {
-		console.log('APP RENDER')
 		return (
 			<Auth>
 				<Layout>
 					{ this.props.userAuth === null || this.props.userAuth === undefined ? <Spinner /> : (
 						<Switch>
 							<UnauthRoute path="/login" component={Login} redirectTo="/lobby" />
+							<AuthRoute exact path="/invite/:id" component={Invite} redirectTo="/login" />
 							<AuthRoute exact path="/game/:id" component={Game} redirectTo="/login" />
 							<AuthRoute path="/game" component={Game} redirectTo="/login" />
 							<AuthRoute exact path="/lobby" component={Lobby} redirectTo="/login" />

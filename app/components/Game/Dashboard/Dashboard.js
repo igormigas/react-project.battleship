@@ -1,12 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Chat from '../Chat';
 
 class Dashboard extends React.Component {
 
 	render() {
-		let gameLink = 'localhost:3000/game/' + this.props.gameID;
+		let gameLink = `${window.location.protocol}//${window.location.host}/invite/${this.props.gameID}`;
 
 		return (
 			<div className="Dashboard">
@@ -19,10 +18,4 @@ class Dashboard extends React.Component {
 	}
 }
 
-const mapStateToProps = state => {
-  return {
-    gameID: state.game.gameID
-  }
-}
-
-export default connect(mapStateToProps)(Dashboard);
+export default Dashboard;
