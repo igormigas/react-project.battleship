@@ -9,16 +9,16 @@ import database from '../../services/firebase/';
 import classes from './Game.scss';
 
 class GameController extends React.Component {
-	static propTypes = {
-		gameID: PropTypes.string.isRequired
-	}
+  static propTypes = {
+    gameID: PropTypes.string.isRequired
+  }
 
-	state = {
-		verifyUser: false
-	}
+  state = {
+    verifyUser: false
+  }
 
-	componentDidMount() {
-  	this.listenGameData(this.props.gameID)
+  componentDidMount() {
+    this.listenGameData(this.props.gameID)
   }
 
   componentDidUpdate() {
@@ -34,54 +34,54 @@ class GameController extends React.Component {
   }
 
   onFireHandler = (player, row, col) => {
-  	database.makeShot(this.props.gameID, player, row-1, col-1);
-  	//alert('FIRE! Player: ' + player + ' /' + row + ':' + col);
+    database.makeShot(this.props.gameID, player, row-1, col-1);
+    //alert('FIRE! Player: ' + player + ' /' + row + ':' + col);
   }
 
   onMouseEnterSquareHandler = (row, col) => {
-  	this.setState({
-  		hovering: true,
-  		hoverRow: row,
-  		hoverCol: col,
-  	})
+    this.setState({
+      hovering: true,
+      hoverRow: row,
+      hoverCol: col,
+    })
   }
 
   onMouseLeaveSquareHandler = () => {
-  	this.setState({
-  		hovering: false
-  	})
+    this.setState({
+      hovering: false
+    })
   }
 
-	render() {
+  render() {
     if (this.props.gameData) {
       const gameData = this.props.gameData;
       const gameID = this.props.gameID;
       console.log(gameData.grids[0].fields)
 
-			return (
-				<section className={classes.Game}>
-	        <GameDashboard gameID={gameID} />
-	        <Grid
-	          player={0}
-	          active={gameData.turn == 0}
-	          gameID={gameID}
-	          fields={gameData.grids[0].fields}
-	          clickEvent={this.onFireHandler}
-	          mouseEnterEvent={this.onMouseEnterSquareHandler}
-	          mouseLeaveEvent={this.onMouseLeaveSquareHandler} />
-	        <Grid
-	          player={1}
-	          active={gameData.turn == 1}
-	          gameID={gameID}
-	          fields={gameData.grids[1].fields}
-	          clickEvent={this.onFireHandler}
-	          mouseEnterEvent={this.onMouseEnterSquareHandler}
-	          mouseLeaveEvent={this.onMouseLeaveSquareHandler} />
-	      </section>
-			);
-		}
-		return null;
-	}
+      return (
+        <section className={classes.Game}>
+          <GameDashboard gameID={gameID} />
+          <Grid
+            player={0}
+            active={gameData.turn == 0}
+            gameID={gameID}
+            fields={gameData.grids[0].fields}
+            clickEvent={this.onFireHandler}
+            mouseEnterEvent={this.onMouseEnterSquareHandler}
+            mouseLeaveEvent={this.onMouseLeaveSquareHandler} />
+          <Grid
+            player={1}
+            active={gameData.turn == 1}
+            gameID={gameID}
+            fields={gameData.grids[1].fields}
+            clickEvent={this.onFireHandler}
+            mouseEnterEvent={this.onMouseEnterSquareHandler}
+            mouseLeaveEvent={this.onMouseLeaveSquareHandler} />
+        </section>
+      );
+    }
+    return null;
+  }
 }
 
 const mapStateToProps = state => {
