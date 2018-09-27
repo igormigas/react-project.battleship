@@ -7,57 +7,56 @@ import imgCross from '../../images/svg/icon-cross.svg';
 import classes from './Grid.scss';
 
 const square = (props) => {
-
   const getValue = () => {
     switch (props.type) {
       case 2:
-      return <img src={imgDot} />;
+        return <img src={imgDot} />;
 
       case 3:
-      return null;
+        return null;
 
       case 4:
-      return <img src={imgCross} />;
+        return <img src={imgCross} />;
 
       default:
-      return null;
+        return null;
     }
-  }
+  };
 
   const getClass = () => {
     switch (props.type) {
       case 2:
-      return classes.missed;
+        return classes.missed;
 
       case 3:
-      return classes.ship;
+        return classes.ship;
 
       case 4:
-      return classes.hit;
+        return classes.hit;
 
       default:
-      return classes.default;
+        return classes.default;
     }
-  }
+  };
 
   const onClickHandler = () => {
-    props.clickEvent(props.row, props.col)
-  }
+    props.clickEvent(props.row, props.col);
+  };
 
   const onMouseEnterHandler = () => {
-    props.mouseEnterEvent(props.row, props.col)
-  }
+    props.mouseEnterEvent(props.row, props.col);
+  };
 
   const onMouseLeaveHandler = () => {
-    props.mouseLeaveEvent()
-  }
+    props.mouseLeaveEvent();
+  };
 
   function styles() {
-    let array = [
+    const array = [
       classes.Square,
-      getClass()
+      getClass(),
     ];
-    (props.hovered) && array.push(classes.hovered);
+    props.hovered && array.push(classes.hovered);
     return array.join(' ');
   }
 
@@ -66,7 +65,8 @@ const square = (props) => {
       className={styles()}
       onClick={onClickHandler}
       onMouseEnter={onMouseEnterHandler}
-      onMouseLeave={onMouseLeaveHandler}>
+      onMouseLeave={onMouseLeaveHandler}
+    >
       {getValue()}
     </div>
   );
@@ -80,6 +80,6 @@ square.propTypes = {
   clickEvent: PropTypes.func.isRequired,
   mouseEnterEvent: PropTypes.func.isRequired,
   mouseLeaveEvent: PropTypes.func.isRequired,
-}
+};
 
 export default square;

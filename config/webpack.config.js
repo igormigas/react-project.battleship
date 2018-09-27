@@ -11,8 +11,8 @@ console.log(process.env.NODE_ENV.toUpperCase());
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 // Useful modules
@@ -21,13 +21,13 @@ const path = require('path');
 //
 // Paths & directories
 //
-const ROOT = path.resolve(__dirname, '../')
+const ROOT = path.resolve(__dirname, '../');
 const dirDistribution = 'dist/';
 const dirApp = 'app/';
 
 // DOTENV
 const dotenvFile = devMode ? '.env.development' : '.env.production';
-const env = dotenv.config({'path': path.resolve(__dirname, dotenvFile)}).parsed;
+const env = dotenv.config({ path: path.resolve(__dirname, dotenvFile) }).parsed;
 const envKeys = Object.keys(env).reduce((prev, next) => {
   prev[`process.env.${next}`] = JSON.stringify(env[next]);
   return prev;
@@ -40,16 +40,16 @@ module.exports = {
   mode: devMode ? 'development' : 'production',
   devtool: devMode ? 'eval-source-map' : false,
   entry: {
-    'index': path.resolve(ROOT, dirApp, 'index.js')
+    index: path.resolve(ROOT, dirApp, 'index.js'),
   },
   output: {
     path: path.resolve(ROOT, dirDistribution),
     filename: 'scripts/[name].dist.js',
-    publicPath: '/'
+    publicPath: '/',
   },
   resolve: {
     // only to use jsx extensions for component files
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
   },
   module: {
     rules: [
@@ -60,9 +60,9 @@ module.exports = {
         query: {
           plugins: [
             '@babel/plugin-proposal-class-properties',
-            '@babel/plugin-proposal-export-default-from'
-          ]
-        }
+            '@babel/plugin-proposal-export-default-from',
+          ],
+        },
       },
       {
         test: /\.s?css$/,
@@ -75,16 +75,16 @@ module.exports = {
               sourceMap: true,
               modules: true,
               localIdentName: '[name]_[local]_[hash:base64:5]',
-              importLoaders: 1
-            }
+              importLoaders: 1,
+            },
           },
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: true
-            }
-          }
-        ]
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.s?css$/,
@@ -94,16 +94,16 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true
-            }
+              sourceMap: true,
+            },
           },
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: true
-            }
-          }
-        ]
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
@@ -114,32 +114,32 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {}
-          }
-        ]
-      }
-    ]
+            options: {},
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(ROOT, dirApp, 'template.html'),
       filename: path.resolve(ROOT, dirDistribution, 'index.html'),
       title: 'tescior',
-      inject: 'body'
+      inject: 'body',
     }),
     new MiniCssExtractPlugin({
       filename: 'styles/[name].dist.css',
       chunkFilename: 'styles/[id].dist.css',
     }),
-    new webpack.DefinePlugin(envKeys)
+    new webpack.DefinePlugin(envKeys),
   ],
   optimization: {
     minimizer: [
-      new OptimizeCSSAssetsPlugin({})
-    ]
+      new OptimizeCSSAssetsPlugin({}),
+    ],
   },
   stats: {
-    colors: true
+    colors: true,
   },
   devServer: {
     port: 4000,
@@ -147,6 +147,6 @@ module.exports = {
     contentBase: path.resolve(ROOT, dirDistribution),
     historyApiFallback: true,
     publicPath: '/',
-    https: true
-  }
-}
+    https: true,
+  },
+};

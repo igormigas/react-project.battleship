@@ -1,12 +1,11 @@
 import React from 'react';
 
-//import classes from './Error404.scss'
+// import classes from './Error404.scss'
 
 class Error404 extends React.Component {
-
-	render() {
-		return (<h1>Error404!</h1>);
-	}
+  render() {
+    return (<h1>Error404!</h1>);
+  }
 }
 
 export default Error404;

@@ -1,84 +1,90 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import spinnerService from './spinnerService';
 
 import classes from './Spinner.scss';
 
 class Spinner extends React.Component {
-	
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			showSpinner: true,
-			showMessage: false
-		}
+    this.state = {
+      showSpinner: true,
+      showMessage: false,
+    };
 
-		if (this.props.hasOwnProperty('service')) {
-			this.service = this.props.service
-		} else {
-			this.service = spinnerService;
-		}
-		
-		this.service.register(this);
-	}
+    if (this.props.hasOwnProperty('service')) {
+      this.service = this.props.service;
+    } else {
+      this.service = spinnerService;
+    }
 
-	componentWillUnmount() {
-		this.service.unregister(this);
-	}
+    this.service.register(this);
+  }
 
-	get name() {
-		return this.props.name;
-	}
+  componentWillUnmount() {
+    this.service.unregister(this);
+  }
 
-	get status() {
-		return this.state.showSpinner;
-	}
+  get name() {
+    return this.props.name;
+  }
 
-	show() {
-		this.startTimeout();
-		this.setState({showSpinner: true});
-	}
+  get status() {
+    return this.state.showSpinner;
+  }
 
-	hide() {
-		this.stopTimeout();
-		this.setState({
-			showSpinner: false,
-			showMessage: false
-		});
-	}
+  show() {
+    this.startTimeout();
+    this.setState({ showSpinner: true });
+  }
 
-	startTimeout() {
-		this.timeout = setTimeout(() => {
-			this.setState({
-				showMessage: true
-			});
-			console.log('TIMEOUT');
-		}, 8000);
-	}
+  hide() {
+    this.stopTimeout();
+    this.setState({
+      showSpinner: false,
+      showMessage: false,
+    });
+  }
 
-	stopTimeout() {
-		clearTimeout(this.timeout);
-	}
+  startTimeout() {
+    this.timeout = setTimeout(() => {
+      this.setState({
+        showMessage: true,
+      });
+    }, 8000);
+  }
 
-	render() {
+  stopTimeout() {
+    clearTimeout(this.timeout);
+  }
 
-		const message = this.state.showMessage ? (
-			<div className={classes.Message}>
+  render() {
+    const message = this.state.showMessage ? (
+      <div className={classes.Message}>
 				Strona może mieć problem z załadowaniem danych...
-			</div>
-		) : null;
 
-		return (
-			this.state.showSpinner ? <div className={classes.Spinner}>
-				<div className={classes.preloadJuggle}>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
-				{message}
-			</div> : null);
-	}
+      </div>
+    ) : null;
+
+    return (
+      this.state.showSpinner ? (
+        <div className={classes.Spinner}>
+          <div className={classes.preloadJuggle}>
+            <div />
+            <div />
+            <div />
+          </div>
+          {message}
+        </div>
+      ) : null);
+  }
 }
+
+Spinner.propTypes = {
+  name: PropTypes.string,
+  service: PropTypes.instanceOf(spinnerService),
+};
 
 export default Spinner;

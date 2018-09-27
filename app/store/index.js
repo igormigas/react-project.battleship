@@ -1,18 +1,17 @@
-import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
-import { createReducer } from './reducers';
 import logger from 'redux-logger';
+import { createReducer } from './reducers';
 
 // Pass native Redux Provider
 export { Provider } from 'react-redux';
 
 // Middlewares
-let middlewares = [];
+const middlewares = [];
 if (process.env.NODE_ENV !== 'production') {
-	middlewares.push(logger);
+  middlewares.push(logger);
 }
 
 export const store = createStore(
-	createReducer(),
-	applyMiddleware(...middlewares)
+  createReducer(),
+  applyMiddleware(...middlewares),
 );

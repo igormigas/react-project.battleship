@@ -8,47 +8,46 @@
 //
 
 class spinnerService {
-	
-	constructor() {
-		this.cache = new Set();
-	}
+  constructor() {
+    this.cache = new Set();
+  }
 
-	register(instance) {
-		this.cache.add(instance);
-	}
+  register(instance) {
+    this.cache.add(instance);
+  }
 
-	unregister(instance) {
-		this.cache.forEach( spinner => {
-			if (spinner === instance) {
-				this.cache.delete(spinner);
-			}
-		})
-	}
+  unregister(instance) {
+    this.cache.forEach((spinner) => {
+      if (spinner === instance) {
+        this.cache.delete(spinner);
+      }
+    });
+  }
 
-	show(name) {
-		this.cache.forEach( spinner => {
-			if (spinner.name === name) {
-				spinner.show();
-			}
-		})
-	}
+  show(name) {
+    this.cache.forEach((spinner) => {
+      if (spinner.name === name) {
+        spinner.show();
+      }
+    });
+  }
 
-	hide(name) {
-		this.cache.forEach( spinner => {
-			if (spinner.name === name) {
-				spinner.hide();
-			}
-		})
-	}
+  hide(name) {
+    this.cache.forEach((spinner) => {
+      if (spinner.name === name) {
+        spinner.hide();
+      }
+    });
+  }
 
-	isShowing(name) {
-		this.cache.forEach( spinner => {
-			if (spinner.name === name) {
-				return true
-			}
-		});
-		return false;
-	}
+  isShowing(name) {
+    this.cache.forEach((spinner) => {
+      if (spinner.name === name) {
+        return true;
+      }
+    });
+    return false;
+  }
 }
 
-export default new spinnerService;
+export default new spinnerService();

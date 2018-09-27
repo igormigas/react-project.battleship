@@ -1,6 +1,4 @@
-const functions = (database) => {
-	return {
-	}
-}
+const functions = database => ({
+});
 
 export default functions;

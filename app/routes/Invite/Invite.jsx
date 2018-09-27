@@ -1,18 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import database from '../../services/firebase/';
-//import classes from './Invite.scss'
+import database from '../../services/Firebase';
+// import classes from './Invite.scss'
 
 class Invite extends React.Component {
-
   state = {
     showInvitation: null,
-    emptySlot: null
-  }
+    emptySlot: null,
+  };
 
   componentDidMount() {
-    database.getGamePlayers(this.props.match.params.id, response => {
+    database.getGamePlayers(this.props.match.params.id, (response) => {
       if (!response.exists()) {
         // Error in game config in database
         this.props.history.replace('/lobby');
@@ -20,7 +20,7 @@ class Invite extends React.Component {
         response = response.val();
         const playersID = response ? [
           response[0] ? response[0].id : null,
-          response[1] ? response[1].id : null
+          response[1] ? response[1].id : null,
         ] : [];
 
         if (this.props.userData.id && playersID.includes(this.props.userData.id)) {
@@ -29,14 +29,14 @@ class Invite extends React.Component {
           this.setState({
             showInvitation: true,
             emptySlot: playersID[0] ? 1 : 0,
-          })
+          });
         } else {
           this.setState({
-            showInvitation: false
-          })
+            showInvitation: false,
+          });
         }
       }
-    })
+    });
   }
 
   onAcceptHandler = () => {
@@ -47,52 +47,50 @@ class Invite extends React.Component {
         last: this.props.userData.lastName,
       },
       picture: {
-        url: this.props.userData.picture.data.url
-      }
+        url: this.props.userData.picture.data.url,
+      },
     })
-    .then(this.redirectToGame);
-  }
+      .then(this.redirectToGame);
+  };
 
   onRefuseHandler = () => {
     this.props.history.push('/');
-  }
+  };
 
   redirectToGame = () => {
-    this.props.history.replace('/game/' + this.props.match.params.id);
-  }
+    this.props.history.replace(`/game/${this.props.match.params.id}`);
+  };
 
   isOneNull = (...args) => {
-    console.log(args)
-    //return (args[0] && !args[1]) || (!args[0] && args[1]);
-    const nulls = args.reduce( (prev, next) => {
-      return next === null ? prev + 1 : prev;
-    }, 0);
-    return nulls === 1 ? true : false;
-  }
+    console.log(args);
+    // return (args[0] && !args[1]) || (!args[0] && args[1]);
+    const nulls = args.reduce((prev, next) => (next === null ? prev + 1 : prev), 0);
+    return nulls === 1;
+  };
 
   render() {
     let content;
-    switch(this.state.showInvitation) {
+    switch (this.state.showInvitation) {
       case true:
-      content = (
-        <div>
+        content = (
+          <div>
           Czy chcesz dołączyć do gry?
-          <button onClick={this.onAcceptHandler}>Yes!</button>
-          <button onClick={this.onRefuseHandler}>Naah..</button>
-        </div>
-      );
-      break;
+            <button onClick={this.onAcceptHandler}>Yes!</button>
+            <button onClick={this.onRefuseHandler}>Naah..</button>
+          </div>
+        );
+        break;
 
       case false:
-      content = (
-        <div>
+        content = (
+          <div>
           Nie ma, zajęte!
-        </div>
-      )
-      break;
+          </div>
+        );
+        break;
 
       default:
-      content = 'Spinner';
+        content = 'Spinner';
     }
 
     return (
@@ -103,15 +101,20 @@ class Invite extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    userData: {
-      id: state.auth.userID,
-      firstName: state.auth.userFirstName,
-      lastName: state.auth.userLastName,
-      picture:  state.auth.userPicture,
-    }
-  }
-}
+Invite.propTypes = {
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  userData: PropTypes.object,
+};
+
+const mapStateToProps = state => ({
+  userData: {
+    id: state.auth.userID,
+    firstName: state.auth.userFirstName,
+    lastName: state.auth.userLastName,
+    picture: state.auth.userPicture,
+  },
+});
 
 export default connect(mapStateToProps)(Invite);

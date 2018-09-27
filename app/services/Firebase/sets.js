@@ -3,9 +3,11 @@ import lobbySet from './functions/lobby.set';
 import gamesSet from './functions/games.set';
 import chatSet from './functions/chat.set';
 
-export const sets = {
+const sets = {
   users: usersSet,
   lobby: lobbySet,
   games: gamesSet,
-  chat: chatSet
-}
+  chat: chatSet,
+};
+
+export default sets;

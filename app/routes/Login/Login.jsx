@@ -1,55 +1,74 @@
 import React from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-//import LoginForm from './LoginForm.component';
+// import LoginForm from './LoginForm.component';
 import FacebookButton from '../../components/Facebook/FacebookButton';
 
 import auth from '../../modules/auth';
 
-import classes from './Login.scss'
+import classes from './Login.scss';
 
 class Login extends React.Component {
-
   state = {
-    inputs: {}
-  }
+    inputs: {},
+  };
 
   onLoginHandler = () => {
-    auth.login(this.onLoginSuccess, this.onLoginFailure)
-  }
+    auth.login(this.onLoginSuccess, this.onLoginFailure);
+  };
 
-  onLoginSuccess = response => {
+  onLoginSuccess = (response) => {
     console.log(response);
-    this.props.userAuthenticated(response)
+    this.props.userAuthenticated(response);
     this.props.history.replace('/');
-  }
+  };
 
-  onLoginFailure = response => {
-  }
+  onLoginFailure = (response) => {
+  };
 
-  onInputChangeHandler = e => {
+  onInputChangeHandler = (e) => {
     this.setState({
       inputs: {
         ...this.state.inputs,
-        [e.target.name]: e.target.value
-      }
-    })
-  }
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
 
-  onFormSubmitHandler = e => {
+  onFormSubmitHandler = (e) => {
     e.preventDefault();
     console.log('Login: ', e.target.name);
-  }
+  };
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <div className={classes.LoginForm}>
         <form>
-          <input onChange={this.onInputChangeHandler} className={classes.loginInput} name="login" type="text" placeholder="login" value={this.state.login} />
-          <input onChange={this.onInputChangeHandler} className={classes.loginInput} name="password" type="password" placeholder="password" value={this.state.password} />
-          <input onClick={this.onFormSubmitHandler} className={classes.loginInput} name="submit" type="submit" value="SIGN IN" />
+          <input
+            onChange={this.onInputChangeHandler}
+            className={classes.loginInput}
+            name="login"
+            type="text"
+            placeholder="login"
+            value={this.state.login}
+          />
+          <input
+            onChange={this.onInputChangeHandler}
+            className={classes.loginInput}
+            name="password" type="password"
+            placeholder="password"
+            value={this.state.password}
+          />
+          <input
+            onClick={this.onFormSubmitHandler}
+            className={classes.loginInput}
+            name="submit"
+            type="submit"
+            value="SIGN IN"
+          />
         </form>
         <h3>or..</h3>
         <FacebookButton onClickHandler={this.onLoginHandler} />
@@ -58,10 +77,22 @@ class Login extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    userAuthenticated: ( {id, first_name, last_name, picture} ) => dispatch({type: 'USER_AUTHENTICATE', payload: {id, first_name, last_name, picture}})
-  }
-}
+Login.propTypes = {
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  userAuthenticated: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = dispatch => ({
+  userAuthenticated: ({
+    id, firstName, lastName, picture,
+  }) => dispatch({
+    type: 'USER_AUTHENTICATE',
+    payload: {
+      id, firstName, lastName, picture,
+    },
+  }),
+});
 
 export default connect(null, mapDispatchToProps)(Login);
