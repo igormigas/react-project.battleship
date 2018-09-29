@@ -20,6 +20,7 @@ class Grid extends React.Component {
   };
 
   onMouseEnterSquareHandler = (row, col) => {
+    this.arrao(row, 4);
     this.setState({
       hovering: true,
       hoverRow: row,
@@ -35,6 +36,13 @@ class Grid extends React.Component {
 
   isHovered(x, y) {
     return this.state.hovering && x === this.state.hoverRow && y === this.state.hoverCol;
+  }
+
+  arrao(cord, size) {
+    console.log(cord, size);
+    const start = cord - Math.floor((size-1)/2);
+    console.log(start);
+    return Array(size).fill(start).map((val, i) => val + i);
   }
 
   createGrid = (fields) => {
