@@ -1,7 +1,8 @@
 import authFB from './authFB';
+import authFirebase from './authFirebase';
 
 class auth {
-  service = new authFB();
+  service = new authFirebase();
 
   checkAuthStatus(successCallback, failCallback = null) {
     this.service.getLoginStatus(response => (
@@ -17,6 +18,10 @@ class auth {
     } else {
       console.log('Authorization failure (without callback)');
     }
+  }
+
+  signup(email, password, successCallback, failCallback) {
+
   }
 
   login(successCallback, failCallback = null) {

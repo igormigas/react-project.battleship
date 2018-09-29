@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import GameController from './GameController';
 
-import database from '../../services/Firebase';
+import database from '../../database';
 import { getInitialGridConfig } from '../../functions/initial';
 
 class Game extends Component {

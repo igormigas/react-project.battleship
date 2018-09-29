@@ -1,8 +1,5 @@
 import firebase from 'firebase/app';
-import 'firebase/database';
-import { config } from '../config';
-
-let instance = null;
+import { config } from './config';
 
 try {
   if (!config.init) {
@@ -12,8 +9,6 @@ try {
   if (!firebase.apps.length) {
     let app = firebase.initializeApp(config);
   }
-
-  instance = firebase.database();
 } catch (e) {
   const prefix = '[FIREBASE SERVICE]';
 
@@ -27,5 +22,4 @@ try {
   }
 }
 
-const expInstance = instance;
-export default expInstance;
+export default firebase;

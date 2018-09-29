@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import GameDashboard from '../../components/Game/Dashboard';
 import Grid from '../../components/Grid';
 
-import database from '../../services/Firebase';
+import database from '../../database';
 import classes from './Game.scss';
 
 class GameController extends React.Component {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import LeaderboardItem from './LeaderboardItem';
-import database from '../../services/Firebase';
+import database from '../../database';
 
 class Leaderboard extends React.Component {
   componentDidMount() {

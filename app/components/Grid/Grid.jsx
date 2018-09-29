@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Square from './Square';
 import SquareLabel from './SquareLabel';
-import database from '../../services/Firebase';
+import database from '../../database';
 import * as utils from '../../functions/grid';
 
 import classes from './Grid.scss';
