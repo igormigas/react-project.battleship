@@ -45,13 +45,13 @@ class Game extends Component {
 
     config.details.players = {
       0: {
-        id: this.props.userData.id,
+        id: this.props.userID,
         name: {
-          first: this.props.userData.firstName,
-          last: this.props.userData.lastName,
+          first: this.props.userData.profile.firstName,
+          last: this.props.userData.profile.lastName,
         },
         picture: {
-          url: this.props.userData.picture.url,
+          url: this.props.userData.profile.picture.url,
         },
       },
     };
@@ -76,7 +76,7 @@ class Game extends Component {
       players[1] ? players[1].id : null,
     ];
 
-    if (playersID.includes(this.props.userData.id)) {
+    if (playersID.includes(this.props.userID)) {
       console.log('PLAY');
       this.setState({
         gameInitialized: true,
@@ -121,16 +121,13 @@ Game.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  userData: PropTypes.object,
+  userID: PropTypes.string.isRequired,
+  userData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  userData: {
-    id: state.auth.userID,
-    firstName: state.auth.userFirstName,
-    lastName: state.auth.userLastName,
-    picture: state.auth.userPicture,
-  },
+  userID: state.auth.uid,
+  userData: state.auth.isAuth ? state.auth.data : null,
 });
 
 const mapDispatchToProps = dispatch => ({

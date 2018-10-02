@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 
-import appReducer from './routes/app.reducer';
-import authReducer from './routes/auth.reducer';
-import gameReducer from './routes/game.reducer';
+import appReducer from './reducers/app.reducer';
+import authReducer from './reducers/auth.reducer';
+import gameReducer from './reducers/game.reducer';
 
 export function createReducer() {
   return combineReducers({

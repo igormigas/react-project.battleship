@@ -67,7 +67,7 @@ Chat.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  userID: state.auth.userID,
+  userID: state.auth.uid,
   gameData: state.game.gameData,
 });
 

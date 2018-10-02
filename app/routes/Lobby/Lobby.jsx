@@ -7,17 +7,21 @@ import ActiveGames from '../../components/ActiveGames';
 import Leaderboard from '../../components/Leaderboard';
 import NewGamePanel from '../../components/NewGamePanel';
 
+import classes from './Lobby.scss';
+
 class Lobby extends React.Component {
-  componentDidMount() {
-
-  }
-
   render() {
     return (
-      <section className="Lobby">
-        <NewGamePanel history={this.props.history} />
-        <ActiveGames />
-        <Leaderboard />
+      <section className={classes.Lobby}>
+        <div className={classes.NewGamePanel}>
+          <NewGamePanel history={this.props.history} />
+        </div>
+        <div className={classes.ActiveGames}>
+          <ActiveGames />
+        </div>
+        <div className={classes.Leaderboard}>
+          <Leaderboard />
+        </div>
       </section>
     );
   }
@@ -27,16 +31,6 @@ Lobby.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  userData: PropTypes.object,
 };
 
-const mapStateToProps = state => ({
-  userData: {
-    id: state.auth.userID,
-    firstName: state.auth.userFirstName,
-    lastName: state.auth.userLastName,
-    picture: state.auth.userPicture,
-  },
-});
-
-export default connect(mapStateToProps)(withRouter(Lobby));
+export default connect()(withRouter(Lobby));

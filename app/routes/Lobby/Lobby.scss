@@ -1,0 +1,20 @@
+.Lobby {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	min-height: 400px;
+}
+
+.NewGamePanel {
+	flex: 0 0 30%;
+}
+
+.ActiveGames {
+	flex: 0 0 30%;
+}
+
+.Leaderboard {
+	flex: 0 0 30%;
+	margin: 0px;
+	padding: 0px;
+}
