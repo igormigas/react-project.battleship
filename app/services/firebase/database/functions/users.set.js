@@ -50,6 +50,14 @@ const functions = database => ({
       });
   },
 
+  updateLastLoginTimestamp: (uid) => {
+    database
+      .ref(`/users/${uid}/userData`)
+      .update({
+        lastVisited: new Date() / 1000 | 0,
+      })
+  }
+
 });
 
 export default functions;

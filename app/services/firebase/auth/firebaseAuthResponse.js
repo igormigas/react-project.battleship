@@ -35,7 +35,6 @@ export function transformProviderResponse(response) {
     userData,
     authData,
   };
-  console.log(output);
   return output;
 }
 

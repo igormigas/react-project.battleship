@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
-import AuthForms from './forms/AuthForms';
+import AuthForms from './AuthForms';
 
 import auth from '../../auth';
 import database from '../../database';
@@ -10,10 +9,17 @@ import database from '../../database';
 class Auth extends React.Component {
   state = {
     inputs: {},
+    errorCode: null,
   };
 
   onLogoutHandler = () => {
     auth.logout();
+  };
+
+  displayError(code) {
+    this.setState({
+      errorCode: code,
+    })
   };
 
   /*
@@ -28,8 +34,10 @@ class Auth extends React.Component {
   onServiceLoginSuccess = (response) => {
     const { isNewUser, ...userData } = response;
     if (isNewUser) {
+      console.log('SERVICE LOGIN: NEW USER')
       database.createNewUser(userData);
     } else {
+      console.log('SERVICE LOGIN: old USER')
       database.updateUser(userData);
     }
     console.log(response);
@@ -38,35 +46,50 @@ class Auth extends React.Component {
 
   onServiceLoginFailure = (response) => {
     console.log('SERVICE LOGIN FAILURE CALLBACK', response);
+    this.displayError(response.code);
   };
 
-  onEmailLoginSuccess = (response) => {
+  onEmailSignUpSuccess = (response) => {
     const { isNewUser, ...userData } = response;
-    if (isNewUser) {
-      database.createNewUser(userData);
-    } else {
-      database.updateUser(userData);
-    }
-    console.log(response);
+    console.log(userData);
+    database.createNewUser(userData);
     this.props.history.replace('/');
   };
 
-  onEmailLoginFailure = (response) => {
-    console.log('FIREBASE SIGN IN ERROR: ', response.code, response.message);
+  onEmailSignUpFailure = (response) => {
+    console.log('FIREBASE SIGN UP ERROR: ', response.code, response.message);
+    this.displayError(response.code);
   };
 
-  onSignUpSubmit = (username, email, password) => {
+  onEmailSignInSuccess = (response) => {
+    console.log('[EMAIL SIGNIN SUCCESS', response);
+    const { uid } = response;
+    database.updateLastLoginTimestamp(uid);
+    this.props.history.replace('/');
+  };
+
+  onEmailSignInFailure = (response) => {
+    console.log('[EMAIL SIGNIN FAIL', response);
+    this.displayError(response.code);
+  };
+
+  onSignUpSubmit = ({ username, email, password }) => {
     auth.signUpWithEmail(
       username,
       email,
       password,
-      this.onEmailLoginSuccess,
-      this.onEmailLoginFailure,
+      this.onEmailSignUpSuccess,
+      this.onEmailSignUpFailure,
     );
   };
 
-  onSignInSubmit = () => {
-
+  onSignInSubmit = ({ email, password }) => {
+    auth.signInWithEmail(
+      email,
+      password,
+      this.onEmailSignInSuccess,
+      this.onEmailSignInFailure,
+    );
   };
 
   onServiceLoginSubmit = (service) => {
@@ -82,6 +105,7 @@ class Auth extends React.Component {
   render() {
     return (
       <AuthForms
+        errorCode={this.state.errorCode}
         onSignUpSubmit={this.onSignUpSubmit}
         onSignInSubmit={this.onSignInSubmit}
         onServiceLoginSubmit={this.onServiceLoginSubmit}
@@ -96,8 +120,4 @@ Auth.propTypes = {
   location: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-
-});
-
-export default connect(null, mapDispatchToProps)(Auth);
+export default Auth;
