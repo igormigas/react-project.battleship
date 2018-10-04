@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import FacebookButton from '../../components/Facebook/FacebookButton';
 
-import classes from './Login.scss';
+import classes from './AuthForms.scss';
 
 const loginForm = props => (
   <div>

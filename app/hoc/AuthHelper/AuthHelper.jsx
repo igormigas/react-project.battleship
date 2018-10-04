@@ -6,7 +6,6 @@ import auth from '../../auth';
 import database from '../../database';
 
 class AuthHelper extends React.Component {
-
   authorizedUser = (response) => {
     console.log('[AuthHelper] AUTHORIZING user in Redux', response);
     database.getUserData(response.uid, data => this.props.userAuthenticated(data));
@@ -34,7 +33,7 @@ AuthHelper.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  userAuthenticated: (payload) => dispatch({type: 'USER_AUTHENTICATED', payload}),
+  userAuthenticated: (payload) => dispatch({ type: 'USER_AUTHENTICATED', payload }),
   userNotAuthenticated: () => dispatch({ type: 'USER_NOT_AUTHENTICATED' }),
 });
 

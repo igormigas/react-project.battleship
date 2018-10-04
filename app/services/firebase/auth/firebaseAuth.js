@@ -7,7 +7,7 @@ class firebaseAuth {
   checkAuthStatus(successCallback, failCallback = null) {
     firebase.auth().onAuthStateChanged(response => {
       if (response) {
-        successCallback({uid: response.uid});
+        successCallback({ uid: response.uid });
       } else {
         failCallback(response);
       }
@@ -34,7 +34,6 @@ class firebaseAuth {
       .then(transformProviderResponse)
       .then(successCallback)
       .catch(failCallback);
-
   }
 
   loginWithService(service, successCallback, failCallback) {
@@ -46,7 +45,7 @@ class firebaseAuth {
       .catch(failCallback);
   }
 
-  logout(successCallback=null) {
+  logout(successCallback = null) {
     firebase.auth().signOut()
       .then(successCallback)
       .catch(error => console.log(error));

@@ -6,16 +6,15 @@ import database from '../../database';
 import classes from './Leaderboard.scss';
 
 class Leaderboard extends React.Component {
-
   state = {
     topUsers: [],
-  }
+  };
 
   componentDidMount() {
     database.getTopUsers((result) => {
       this.setState({
         topUsers: result,
-      })
+      });
     });
   }
 
@@ -25,7 +24,7 @@ class Leaderboard extends React.Component {
         key={user.uid}
         name={user.displayName}
         score={user.score}
-        pictureUrl={user.pictureUrl || 'https://robohash.org/'+ user.uid}
+        pictureUrl={user.pictureUrl || 'https://robohash.org/' + user.uid}
       />
     )) : null;
 

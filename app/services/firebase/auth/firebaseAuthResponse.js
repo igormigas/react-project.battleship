@@ -7,7 +7,7 @@ export function transformProviderResponse(response) {
   const uid = user.uid;
 
   let userData = {
-  	email: user.email,
+    email: user.email,
   };
   let authData = {};
 
@@ -21,10 +21,10 @@ export function transformProviderResponse(response) {
       pictureUrl: profile.picture.data.url,
     };
     authData = {
-    	...authData,
-      providerUid:          profile.id,
-      providerName:         provider,
-      providerAccessToken:  credential.accessToken,
+      ...authData,
+      providerUid: profile.id,
+      providerName: provider,
+      providerAccessToken: credential.accessToken,
     };
   }
 
@@ -40,8 +40,8 @@ export function transformProviderResponse(response) {
 }
 
 export function applyDisplayName(displayName) {
-	return function (response) {
-		response['userData']['displayName'] = displayName;
-		return response;
-	}
+  return function (response) {
+    response.userData.displayName = displayName;
+    return response;
+  };
 }

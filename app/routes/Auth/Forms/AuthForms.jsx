@@ -5,8 +5,7 @@ import FacebookButton from '../../../components/Facebook/FacebookButton';
 import classes from './AuthForms.scss';
 
 class AuthForms extends React.Component {
-
-	state = {
+  state = {
     inputs: {},
   };
 
@@ -21,19 +20,19 @@ class AuthForms extends React.Component {
 
   onSignUpSubmit = (e) => {
     e.preventDefault();
-  	this.props.onSignUpSubmit(
-  		this.state.inputs.username,
-  		this.state.inputs.email,
-  		this.state.inputs.password,
-  	);
+    this.props.onSignUpSubmit(
+      this.state.inputs.username,
+      this.state.inputs.email,
+      this.state.inputs.password,
+    );
   };
 
   onFacebookLoginSubmit = (e) => this.props.onServiceLoginSubmit('facebook.com');
   //onGoogleLoginSubmit = (e) => this.props.onServiceLoginSubmit('google.com');
 
-	render() {
-		return (
-			<div className={classes.LoginForm}>
+  render() {
+    return (
+      <div className={classes.LoginForm}>
         <form>
           <input
             onChange={this.onInputChangeHandler}
@@ -73,14 +72,14 @@ class AuthForms extends React.Component {
         <h3>or..</h3>
         <FacebookButton onClickHandler={this.onFacebookLoginSubmit} />
       </div>
-		);
-	};
+    );
+  }
 }
 
 AuthForms.propTypes = {
-	onSignUpSubmit: PropTypes.func.isRequired,
+  onSignUpSubmit: PropTypes.func.isRequired,
   onSignInSubmit: PropTypes.func.isRequired,
   onServiceLoginSubmit: PropTypes.func.isRequired,
-}
+};
 
 export default AuthForms;

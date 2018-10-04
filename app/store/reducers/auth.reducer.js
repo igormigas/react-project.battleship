@@ -1,6 +1,6 @@
 const initialState = {
   isAuth: null,
-  data: {}
+  data: {},
 };
 
 /*
@@ -30,7 +30,7 @@ const reducer = (state = initialState, action) => {
     case 'USER_NOT_AUTHENTICATED':
       return {
         isAuth: false,
-        data: null
+        data: null,
       };
 
     default:

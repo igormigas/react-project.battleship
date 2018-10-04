@@ -8,10 +8,9 @@ import UserProfile from '../../components/UI/UserProfile';
 import classes from './Layout.scss';
 
 class Layout extends React.Component {
-
   onLogoutHandler = () => {
     this.props.history.push('/auth/logout');
-  }
+  };
 
   render() {
     return (

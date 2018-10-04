@@ -1,14 +1,14 @@
 const functions = database => ({
 
- createNewUser: (obj) => {
+  createNewUser: (obj) => {
     database
       .ref('users')
       .child(obj.uid)
       .set({
         ...obj,
         gameData: {
-          score: 0
-        }
+          score: 0,
+        },
       });
   },
 
@@ -35,7 +35,7 @@ const functions = database => ({
       .once('value')
       .then(snapshot => {
         const array = [];
-        snapshot.forEach( childSnap => {
+        snapshot.forEach(childSnap => {
           const child = childSnap.val();
           array.push({
             uid: child.uid,
@@ -45,7 +45,7 @@ const functions = database => ({
             pictureUrl: child.userData.pictureUrl,
             score: child.gameData.score,
           });
-        })
+        });
         callback(array.reverse());
       });
   },

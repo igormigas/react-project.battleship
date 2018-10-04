@@ -16,6 +16,15 @@ class Auth extends React.Component {
     auth.logout();
   };
 
+  /*
+    codes:
+      auth/invalid-email
+      auth/user-disabled
+      auth/user-not-found
+      auth/wrong-password
+    message
+    */
+
   onServiceLoginSuccess = (response) => {
     const { isNewUser, ...userData } = response;
     if (isNewUser) {
@@ -44,14 +53,6 @@ class Auth extends React.Component {
 
   onEmailLoginFailure = (response) => {
     console.log('FIREBASE SIGN IN ERROR: ', response.code, response.message);
-    /*
-    codes:
-      auth/invalid-email
-      auth/user-disabled
-      auth/user-not-found
-      auth/wrong-password
-    message
-    */
   };
 
   onSignUpSubmit = (username, email, password) => {
@@ -66,7 +67,7 @@ class Auth extends React.Component {
 
   onSignInSubmit = () => {
 
-  }
+  };
 
   onServiceLoginSubmit = (service) => {
     auth.loginWithService(service, this.onServiceLoginSuccess, this.onServiceLoginFailure);
