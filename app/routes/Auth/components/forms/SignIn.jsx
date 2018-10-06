@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import classes from './Forms.scss';
 
 class SignIn extends React.Component {
-
   state = {
     inputs: {},
   };
@@ -54,10 +53,10 @@ class SignIn extends React.Component {
       </form>
     );
   }
-};
+}
 
 SignIn.propTypes = {
   onSubmitEvent: PropTypes.func.isRequired,
-}
+};
 
 export default SignIn;

@@ -15,7 +15,7 @@ const serviceLoginButton = props => (
 );
 
 serviceLoginButton.propTypes = {
-	provider: PropTypes.string.isRequired,
+  provider: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   classes: PropTypes.string.isRequired,
   onClickHandler: PropTypes.func.isRequired,

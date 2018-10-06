@@ -10,7 +10,6 @@ import GoogleLoginButton from './components/buttons/GoogleLoginButton';
 import classes from './AuthForms.scss';
 
 class AuthForms extends React.Component {
-
   state = {
     showSignUpForm: false,
   };

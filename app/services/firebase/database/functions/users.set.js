@@ -55,8 +55,8 @@ const functions = database => ({
       .ref(`/users/${uid}/userData`)
       .update({
         lastVisited: new Date() / 1000 | 0,
-      })
-  }
+      });
+  },
 
 });
 

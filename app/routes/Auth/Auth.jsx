@@ -19,8 +19,8 @@ class Auth extends React.Component {
   displayError(code) {
     this.setState({
       errorCode: code,
-    })
-  };
+    });
+  }
 
   /*
     codes:
@@ -34,10 +34,10 @@ class Auth extends React.Component {
   onServiceLoginSuccess = (response) => {
     const { isNewUser, ...userData } = response;
     if (isNewUser) {
-      console.log('SERVICE LOGIN: NEW USER')
+      console.log('SERVICE LOGIN: NEW USER');
       database.createNewUser(userData);
     } else {
-      console.log('SERVICE LOGIN: old USER')
+      console.log('SERVICE LOGIN: old USER');
       database.updateUser(userData);
     }
     console.log(response);
