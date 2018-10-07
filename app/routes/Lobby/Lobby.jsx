@@ -17,7 +17,7 @@ class Lobby extends React.Component {
           <NewGamePanel history={this.props.history} />
         </div>
         <div className={classes.ActiveGames}>
-          <ActiveGames />
+          <ActiveGames userID={this.props.userID} />
         </div>
         <div className={classes.Leaderboard}>
           <Leaderboard />
@@ -31,6 +31,11 @@ Lobby.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  userID: PropTypes.string.isRequired,
 };
 
-export default connect()(withRouter(Lobby));
+const mapStateToProps = state => ({
+  userID: state.auth.uid,
+});
+
+export default connect(mapStateToProps)(withRouter(Lobby));

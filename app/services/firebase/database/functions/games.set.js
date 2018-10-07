@@ -6,6 +6,20 @@ const functions = database => ({
       .then(snapshot => callback(snapshot));
   },
 
+  getGameData: (gameID, callback) => {
+    database
+      .ref(`/games/${gameID}`)
+      .once('value')
+      .then(snapshot => callback(snapshot));
+  },
+
+  getGameState: (gameID, callback) => {
+    database
+      .ref(`/games/${gameID}/state`)
+      .once('value')
+      .then(snapshot => callback(snapshot));
+  },
+
   getGameDetails: (gameID, callback) => {
     database
       .ref(`/games/${gameID}/details`)

@@ -16,7 +16,7 @@ class Grid extends React.Component {
   };
 
   onClickHandler = (row, col) => {
-    this.props.clickEvent(this.props.player, row, col);
+    this.props.onClickEvent(this.props.player, row, col);
   };
 
   onMouseEnterSquareHandler = (row, col) => {
@@ -80,9 +80,7 @@ Grid.propTypes = {
   player: PropTypes.number.isRequired,
   fields: PropTypes.array,
   active: PropTypes.bool,
-  clickEvent: PropTypes.func.isRequired,
-  mouseEnterEvent: PropTypes.func.isRequired,
-  mouseLeaveEvent: PropTypes.func.isRequired,
+  onClickEvent: PropTypes.func.isRequired,
 };
 
 export default Grid;

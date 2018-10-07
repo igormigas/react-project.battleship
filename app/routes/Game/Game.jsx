@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
-import GameController from './GameController';
+import GameLauncher from './GameLauncher';
 
 import database from '../../database';
 import { getInitialGridConfig } from '../../functions/initial';
@@ -47,11 +47,11 @@ class Game extends Component {
       0: {
         id: this.props.userID,
         name: {
-          first: this.props.userData.profile.firstName,
-          last: this.props.userData.profile.lastName,
+          first: this.props.userData.firstName,
+          last: this.props.userData.lastName,
         },
         picture: {
-          url: this.props.userData.profile.picture.url,
+          url: this.props.userData.pictureUrl,
         },
       },
     };
@@ -93,8 +93,6 @@ class Game extends Component {
     } else {
       console.log('ERROR, PROBABLY BOTH NULL, PROBLEM WITH CREATING NEW GAME');
     }
-
-    // this.props.storeGameID(gameID);
   }
 
   theLoop(urlGameID) {
@@ -113,7 +111,7 @@ class Game extends Component {
   }
 
   render() {
-    return this.state.gameInitialized ? <GameController gameID={this.state.gameID} /> : null;
+    return this.state.gameInitialized ? <GameLauncher gameID={this.state.gameID} /> : null;
   }
 }
 
@@ -122,16 +120,12 @@ Game.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   userID: PropTypes.string.isRequired,
-  userData: PropTypes.object.isRequired,
+  userData: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   userID: state.auth.uid,
-  userData: state.auth.isAuth ? state.auth.data : null,
+  userData: state.auth.isAuth ? state.auth.userData : null,
 });
 
-const mapDispatchToProps = dispatch => ({
-  storeGameID: id => dispatch({ type: 'STORE_GAME_ID', id }),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Game));
+export default connect(mapStateToProps)(withRouter(Game));

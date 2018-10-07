@@ -10,7 +10,7 @@ class Leaderboard extends React.Component {
     topUsers: [],
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     database.getTopUsers((result) => {
       this.setState({
         topUsers: result,
