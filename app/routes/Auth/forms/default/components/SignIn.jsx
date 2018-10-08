@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import classes from './Forms.scss';
-
 class SignIn extends React.Component {
   state = {
     inputs: {},
@@ -27,7 +25,6 @@ class SignIn extends React.Component {
       <form>
         <input
           onChange={this.onInputChange}
-          className={classes.loginInput}
           name="email"
           type="email"
           placeholder="email"
@@ -36,7 +33,6 @@ class SignIn extends React.Component {
         />
         <input
           onChange={this.onInputChange}
-          className={classes.loginInput}
           name="password"
           type="password"
           placeholder="password"
@@ -45,7 +41,6 @@ class SignIn extends React.Component {
         />
         <input
           onClick={this.onFormSubmit}
-          className={classes.loginInput}
           name="submit"
           type="submit"
           value="SIGN IN"

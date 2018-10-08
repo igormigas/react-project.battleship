@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import AuthForms from './AuthForms';
+import AuthForm from './forms/default/AuthForm';
 
 import auth from '../../auth';
 import database from '../../database';
@@ -104,7 +104,7 @@ class Auth extends React.Component {
 
   render() {
     return (
-      <AuthForms
+      <AuthForm
         errorCode={this.state.errorCode}
         onSignUpSubmit={this.onSignUpSubmit}
         onSignInSubmit={this.onSignInSubmit}
