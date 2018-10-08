@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Square from './Square';
 import SquareLabel from './SquareLabel';
-import database from '../../services/Firebase';
+import database from '../../database';
 import * as utils from '../../functions/grid';
 
 import classes from './Grid.scss';
@@ -16,7 +16,7 @@ class Grid extends React.Component {
   };
 
   onClickHandler = (row, col) => {
-    this.props.clickEvent(this.props.player, row, col);
+    this.props.onClickEvent(this.props.player, row, col);
   };
 
   onMouseEnterSquareHandler = (row, col) => {
@@ -80,9 +80,7 @@ Grid.propTypes = {
   player: PropTypes.number.isRequired,
   fields: PropTypes.array,
   active: PropTypes.bool,
-  clickEvent: PropTypes.func.isRequired,
-  mouseEnterEvent: PropTypes.func.isRequired,
-  mouseLeaveEvent: PropTypes.func.isRequired,
+  onClickEvent: PropTypes.func.isRequired,
 };
 
 export default Grid;

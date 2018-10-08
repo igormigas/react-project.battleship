@@ -1,28 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import Header from '../../components/UI/Header';
 import Footer from '../../components/UI/Footer';
-import FacebookProfile from '../../components/Facebook/FacebookProfile';
+import UserProfile from '../../components/UI/UserProfile';
 
 import classes from './Layout.scss';
 
 class Layout extends React.Component {
-  static propTypes = {
-    children: PropTypes.node,
+  onLogoutHandler = () => {
+    this.props.history.push('/auth/logout');
   };
 
   render() {
     return (
       <div className={classes.App}>
         <Header />
-        { this.props.userAuth && (
-          <FacebookProfile
-            name={this.props.userName}
-            image={this.props.userPicture.url}
-          />
-        ) }
+        <UserProfile />
         {React.Children.only(this.props.children)}
         <Footer />
       </div>
@@ -31,15 +25,7 @@ class Layout extends React.Component {
 }
 
 Layout.propTypes = {
-  userAuth: PropTypes.bool,
-  userName: PropTypes.string,
-  userPicture: PropTypes.object,
+  children: PropTypes.node,
 };
 
-const mapStateToProps = state => ({
-  userAuth: state.auth.userAuth,
-  userName: `${state.auth.userFirstName} ${state.auth.userLastName}`,
-  userPicture: state.auth.userPicture,
-});
-
-export default connect(mapStateToProps)(Layout);
+export default Layout;

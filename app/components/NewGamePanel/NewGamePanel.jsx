@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import classes from './NewGamePanel.scss';
+
 const newGamePanel = (props) => {
   const onClickHandler = () => {
     props.history.push('/game');
   };
 
   return (
-    <div className="NewGamePanel">
+    <>
       <h4>Start your battleship experience!</h4>
-      <button className="newGameButton" onClick={onClickHandler}>New Game</button>
-    </div>
+      <button className={classes.newGameButton} onClick={onClickHandler}>New Game</button>
+    </>
   );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import database from '../../../services/Firebase';
+import database from '../../../database';
 import classes from './Chat.scss';
 
 class Chat extends React.Component {
@@ -67,7 +67,7 @@ Chat.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  userID: state.auth.userID,
+  userID: state.auth.uid,
   gameData: state.game.gameData,
 });
 

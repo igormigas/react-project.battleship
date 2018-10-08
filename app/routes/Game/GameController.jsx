@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import GameDashboard from '../../components/Game/Dashboard';
 import Grid from '../../components/Grid';
 
-import database from '../../services/Firebase';
+import database from '../../database';
 import classes from './Game.scss';
 
 class GameController extends React.Component {
@@ -65,18 +65,14 @@ class GameController extends React.Component {
             active={gameData.turn === 0}
             gameID={gameID}
             fields={gameData.grids[0].fields}
-            clickEvent={this.onFireHandler}
-            mouseEnterEvent={this.onMouseEnterSquareHandler}
-            mouseLeaveEvent={this.onMouseLeaveSquareHandler}
+            onClickEvent={this.onFireHandler}
           />
           <Grid
             player={1}
             active={gameData.turn === 1}
             gameID={gameID}
             fields={gameData.grids[1].fields}
-            clickEvent={this.onFireHandler}
-            mouseEnterEvent={this.onMouseEnterSquareHandler}
-            mouseLeaveEvent={this.onMouseLeaveSquareHandler}
+            onClickEvent={this.onFireHandler}
           />
         </section>
       );

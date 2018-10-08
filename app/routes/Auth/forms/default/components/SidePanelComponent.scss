@@ -1,0 +1,28 @@
+.SidePanel {
+	position: relative;
+	flex: 0 0 250px;
+	height: 100%;
+
+	background-image: url('../../../../../images/backgrounds/sail.jpeg');
+	background-size: cover;
+	background-position: bottom center;
+
+	.Button {
+		padding: 5px 10px;
+		background-color: transparent;
+		border: 2px solid white;
+		color: white;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+}
+
+.TopContent {
+	margin: 50px 25px;
+}
+
+.BottomContent {
+	position: absolute;
+	left: 25px;
+	bottom: 25px;
+}

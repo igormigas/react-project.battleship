@@ -1,30 +1,35 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 import LeaderboardItem from './LeaderboardItem';
-import database from '../../services/Firebase';
+import database from '../../database';
+
+import classes from './Leaderboard.scss';
 
 class Leaderboard extends React.Component {
-  componentDidMount() {
+  state = {
+    topUsers: [],
+  };
+
+  componentDidMount = () => {
     database.getTopUsers((result) => {
-      this.props.updateTopUsers(_.toArray(result));
+      this.setState({
+        topUsers: result,
+      });
     });
   }
 
   render() {
-    const items = this.props.topUsers.length ? this.props.topUsers.map(user => (
+    const items = this.state.topUsers.length ? this.state.topUsers.map(user => (
       <LeaderboardItem
-        key={user.id}
-        name={user.firstName + ' ' + user.lastName}
+        key={user.uid}
+        name={user.displayName}
         score={user.score}
-        image={user.picture.url || null}
+        pictureUrl={user.pictureUrl || 'https://robohash.org/' + user.uid}
       />
     )) : null;
 
     return (
-      <ul className="Leaderboard">
+      <ul>
         <h4>Top players:</h4>
         {items}
       </ul>
@@ -32,17 +37,4 @@ class Leaderboard extends React.Component {
   }
 }
 
-Leaderboard.propTypes = {
-  topUsers: PropTypes.array,
-  updateTopUsers: PropTypes.func,
-};
-
-const mapStateToProps = state => ({
-  topUsers: state.app.topUsers,
-});
-
-const mapDispatchToProps = dispatch => ({
-  updateTopUsers: topUsers => dispatch({ type: 'UPDATE_TOP_USERS', topUsers }),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Leaderboard);
+export default Leaderboard;

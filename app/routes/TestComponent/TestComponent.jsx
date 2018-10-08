@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import database from '../../services/Firebase';
+import database from '../../database';
 // import classes from './TestComponent.scss'
 
 class TestComponent extends React.Component {

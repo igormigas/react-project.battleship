@@ -1,7 +1,7 @@
 /*
 import React from 'react';
 import { connect } from 'react-redux';
-import database from '../../services/firebase';
+import database from '../../database';
 
 import FacebookProfile from './FacebookProfile';
 import FacebookButton from './FacebookButton';

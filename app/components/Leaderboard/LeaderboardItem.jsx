@@ -1,19 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import classes from './Leaderboard.scss';
+
 const leaderboardItem = props => (
-  <li className="lbItem">
-    <div className="lbImage">
-      <img src={props.image} alt={props.name} />
+  <li className={classes.Item}>
+    <div className={classes.Image}>
+      <img src={props.pictureUrl} alt={props.name} />
     </div>
-    <div className="lbName">{props.name}</div>
-    <div className="lbScore">{props.score}</div>
+    <div className={classes.Name}>{props.name}</div>
+    <div className={classes.Score}>{props.score}</div>
   </li>
 );
 
 leaderboardItem.propTypes = {
   name: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
+  pictureUrl: PropTypes.string.isRequired,
   score: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
