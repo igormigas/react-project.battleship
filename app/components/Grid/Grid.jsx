@@ -3,84 +3,65 @@ import PropTypes from 'prop-types';
 
 import Square from './Square';
 import SquareLabel from './SquareLabel';
-import database from '../../database';
 import * as utils from '../../functions/grid';
-
 import classes from './Grid.scss';
 
 class Grid extends React.Component {
-  state = {
-    hovering: false,
-    hoverRow: null,
-    hoverCol: null,
-  };
 
-  onClickHandler = (row, col) => {
-    this.props.onClickEvent(this.props.player, row, col);
-  };
+  renderGrid = (grid) => {
+    if (!grid) {
+      return null;
+    }
+    const rowsKeys = grid.getRowsKeys();
+    const colsKeys = grid.getColsKeys();
 
-  onMouseEnterSquareHandler = (row, col) => {
-    this.setState({
-      hovering: true,
-      hoverRow: row,
-      hoverCol: col,
-    });
-  };
-
-  onMouseLeaveSquareHandler = () => {
-    this.setState({
-      hovering: false,
-    });
-  };
-
-  isHovered(x, y) {
-    return this.state.hovering && x === this.state.hoverRow && y === this.state.hoverCol;
-  }
-
-  createGrid = (fields) => {
-    const header = [];
-    const countCols = fields[0].length;
-    for (let i = 0; i <= countCols; i++) {
+    let header = [];
+    for (let i=0; i<=grid.countCols(); i++) {
       header.push(
         <SquareLabel key={i} value={i > 0 ? i : null} />,
       );
     }
-    return [
-      <div key="A0" className={classes.Row}>{header}</div>,
-      fields.map((row, x) => (
-        <div className={classes.Row} key={utils.intToChar(x + 1)}>
-          <SquareLabel key={utils.intToChar(x + 1) + 0} value={utils.intToChar(x + 1)} />
-          {row.map((type, y) => (
+    header = <div key="A0" className={classes.Row}>{header}</div>;
+
+    let body = [];
+    grid.forRows(x => {
+      body.push(
+        <div className={classes.Row} key={utils.intToChar(x)}>
+          <SquareLabel key={utils.intToChar(x) + 0} value={utils.intToChar(x)} />
+          {grid.forCols(y => (
             <Square
-              key={utils.intToChar(x + 1) + (y + 1)}
-              row={x + 1}
-              col={y + 1}
-              type={type}
-              hovered={this.isHovered(x + 1, y + 1)}
-              clickEvent={this.onClickHandler}
-              mouseEnterEvent={this.onMouseEnterSquareHandler}
-              mouseLeaveEvent={this.onMouseLeaveSquareHandler}
+              key={utils.intToChar(x) + (y)}
+              row={x}
+              col={y}
+              type={grid.getFieldType(x,y)}
+              hovered={this.props.isHovered(x, y)}
+              clickEvent={this.props.clickEvent}
+              mouseEnterEvent={this.props.mouseEnterEvent}
+              mouseLeaveEvent={this.props.mouseLeaveEvent}
             />
           ))}
         </div>
-      )),
-    ];
+      );
+    });
+
+    return [header,body];
   };
 
-  render() {
-    return (
-      <div className={classes.Grid}>
-        {this.createGrid(this.props.fields)}
+	render() {
+		return (
+			<div className={classes.Grid}>
+        {this.renderGrid(this.props.gridContainer)}
       </div>
-    );
-  }
+		);
+	};
 }
 
 Grid.propTypes = {
-  player: PropTypes.number.isRequired,
-  fields: PropTypes.array,
-  active: PropTypes.bool,
-  onClickEvent: PropTypes.func.isRequired,
-};
+	gridContainer: PropTypes.object,
+  clickEvent: PropTypes.func.isRequired,
+  mouseEnterEvent: PropTypes.func.isRequired,
+  mouseLeaveEvent: PropTypes.func.isRequired,
+  isHovered: PropTypes.func.isRequired,
+}
 
 export default Grid;

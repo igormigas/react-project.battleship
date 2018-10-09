@@ -17,21 +17,20 @@ class ActiveGames extends React.Component {
   componentDidMount() {
     database.getUserActiveGames(this.props.userID, (result) => {
       this.setState({
-        activeGames: result,
+        activeGames: Object.keys(result.val()),
       });
     });
   }
 
   render() {
-    const items = this.state.activeGames.length ? this.state.activeGames.map(game => (
+    const items = this.state.activeGames.length ? this.state.activeGames.map(gid => (
       <ActiveGamesItem
-        key={game.gid}
-        name={game.gid}
+        key={gid}
+        name={gid}
         onClickEvent={this.onClickHandler}
       />
     )) : null;
 
-    console.log(this.state.activeGames);
     return (
       <div className="ActiveGames">
         <h4>Your active games:</h4>

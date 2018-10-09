@@ -6,9 +6,9 @@ import { withRouter } from 'react-router-dom';
 import GameLauncher from './GameLauncher';
 
 import database from '../../database';
-import { getInitialGridConfig } from '../../functions/initial';
+import { getInitialGridConfig, createNewGrid } from '../../functions/initial';
 
-class Game extends Component {
+class GameDispatcher extends Component {
   state = {
     gameID: null,
     gameCreated: false,
@@ -16,16 +16,10 @@ class Game extends Component {
   };
 
   componentDidMount() {
-    console.log('GAME mounted');
-
     this.theLoop(this.props.match.params.id);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('GAME updated');
-    // console.log(prevProps, this.props)
-    // console.log(prevState, this.state)
-
     if (!this.state.gameInitialized) {
       this.theLoop(this.props.match.params.id);
     }
@@ -43,16 +37,21 @@ class Game extends Component {
       },
     };
 
+    config.grids = {
+      [this.props.userID]: createNewGrid(9,9),
+    }
+
+    config.state = {
+      created: true,
+      deployed: {
+        [this.props.userID]: false,
+      },
+    }
+
     config.details.players = {
-      0: {
-        id: this.props.userID,
-        name: {
-          first: this.props.userData.firstName,
-          last: this.props.userData.lastName,
-        },
-        picture: {
-          url: this.props.userData.pictureUrl,
-        },
+      [this.props.userID]: {
+        displayName: this.props.userData.displayName,
+        pictureUrl: this.props.userData.pictureUrl,
       },
     };
     return Object.assign(getInitialGridConfig(), config);
@@ -62,6 +61,7 @@ class Game extends Component {
     const gameID = database.getNewGameKey();
     const gameConfig = this.getInitialGameConfig(gameID);
     database.createNewGame(gameID, gameConfig);
+    database.registerUser(gameID, this.props.userID);
 
     this.setState({
       gameCreated: gameID,
@@ -71,10 +71,9 @@ class Game extends Component {
 
   dispatchGameConfig(gameConfig) {
     const players = gameConfig.players;
-    const playersID = [
-      players[0] ? players[0].id : null,
-      players[1] ? players[1].id : null,
-    ];
+    const playersID = Object.keys(players).map(key => {
+      return key;
+    });
 
     if (playersID.includes(this.props.userID)) {
       console.log('PLAY');
@@ -82,13 +81,10 @@ class Game extends Component {
         gameInitialized: true,
         gameID: gameConfig.id,
       });
-    } else if (
-      (playersID[0] && !playersID[1])
-      || (!playersID[0] && playersID[1])
-    ) {
+    } else if (playersID.length === 1) {
       console.log('DO YOU WANNA PLAY ?');
       this.props.history.replace(`/invite/${gameConfig.id}`);
-    } else if (playersID[0] && playersID[1]) {
+    } else if (playersID.length === 2) {
       console.log('PRIVATE GAME');
     } else {
       console.log('ERROR, PROBABLY BOTH NULL, PROBLEM WITH CREATING NEW GAME');
@@ -115,7 +111,7 @@ class Game extends Component {
   }
 }
 
-Game.propTypes = {
+GameDispatcher.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
@@ -128,4 +124,4 @@ const mapStateToProps = state => ({
   userData: state.auth.isAuth ? state.auth.userData : null,
 });
 
-export default connect(mapStateToProps)(withRouter(Game));
+export default connect(mapStateToProps)(withRouter(GameDispatcher));

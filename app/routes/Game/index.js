@@ -1,3 +1,3 @@
-import Game from './Game';
+import Game from './GameDispatcher';
 
 export default Game;

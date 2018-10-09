@@ -14,6 +14,7 @@ const UserProfileComponent = (props) => (
     <h3>
       {props.displayName}
       <br />
+      <button onClick={props.onHomepageEvent}>HOME</button>
       <button onClick={props.onLogoutEvent}>LOGOUT</button>
     </h3>
   </div>
@@ -22,6 +23,7 @@ const UserProfileComponent = (props) => (
 UserProfileComponent.propTypes = {
   displayName: PropTypes.string.isRequired,
   pictureUrl: PropTypes.string.isRequired,
+  onHomepageEvent: PropTypes.func.isRequired,
   onLogoutEvent: PropTypes.func.isRequired,
 };
 

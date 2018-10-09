@@ -6,9 +6,8 @@ import { connect } from 'react-redux';
 import UserProfileComponent from './UserProfileComponent';
 
 class UserProfile extends React.Component {
-  onLogoutHandler = () => {
-    this.props.history.push('/auth/logout');
-  };
+  onLogoutHandler = () => this.props.history.push('/auth/logout');
+  onHomepageHandler = () => this.props.history.push('/lobby');
 
   render() {
     if (this.props.isAuth && this.props.userData) {
@@ -17,6 +16,7 @@ class UserProfile extends React.Component {
         <UserProfileComponent
           displayName={displayName}
           pictureUrl={pictureUrl || 'https://robohash.org/' + this.props.userID}
+          onHomepageEvent={this.onHomepageHandler}
           onLogoutEvent={this.onLogoutHandler}
         />
       );

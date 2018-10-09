@@ -13,11 +13,10 @@ const functions = database => ({
       .then(snapshot => callback(snapshot));
   },
 
-  getGameState: (gameID, callback) => {
+  listenGameState: (gameID, callback) => {
     database
       .ref(`/games/${gameID}/state`)
-      .once('value')
-      .then(snapshot => callback(snapshot));
+      .on('value', snapshot => callback(snapshot));
   },
 
   getGameDetails: (gameID, callback) => {
@@ -40,10 +39,20 @@ const functions = database => ({
     return key;
   },
 
-  createNewGame: (gameID, obj) => database
-    .ref('/games')
-    .child(gameID)
-    .set(obj),
+  createNewGame: (gameID, obj) => {
+    database
+      .ref('/games')
+      .child(gameID)
+      .set(obj);
+  },
+
+  registerUser: (gameID, userID) => {
+    database
+      .ref(`/users/${userID}/games`)
+      .set({
+        [gameID]: true,
+      });
+  },
 
   createOpponent: (gameID, slot, obj) => database
     .ref(`/games/${gameID}/details/players/${slot}`)
@@ -56,22 +65,32 @@ const functions = database => ({
   },
 
 
-  makeShot: (gameID, player, row, col) => {
+  makeShot: (gameID, userID, row, col) => {
     const updates = {};
-    const opponent = player ? 0 : 1;
-    updates[`/grids/${player}/fields/${row}/${col}`] = 2;
-    updates['/turn'] = opponent;
+    updates[`/grids/${userID}/${row}/${col}/shot`] = true;
+    updates['/lastShot'] = userID;
     database
       .ref(`/games/${gameID}`)
       .update(updates);
   },
 
-  updateGameField: (gameID, row, col) => {
+  getPlayerGrid: (gameID, userID, callback) => {
     database
-      .ref(`/games/${gameID}/fields/${row}/${col}`)
-      .update({
-        shot: 'true',
-      });
+      .ref(`/games/${gameID}/grids/${userID}`)
+      .once('value')
+      .then(snapshot => callback(snapshot.exists() ? snapshot.val() : false));
+  },
+
+  savePlayerGrid: (gameID, userID, grid) => {
+    return database
+      .ref(`/games/${gameID}/grids/${userID}`)
+      .update(grid);
+  },
+
+  setGameStateDeployed: (gameID, userID) => {
+    database
+      .ref(`/games/${gameID}/state/deployed/${userID}`)
+      .set(true);
   },
 });
 

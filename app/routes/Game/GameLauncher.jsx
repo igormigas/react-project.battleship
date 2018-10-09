@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
-import GameController from './GameController';
+import GameBattle from './GameBattle';
 import GameCreator from './GameCreator';
 
 import database from '../../database';
@@ -11,28 +10,39 @@ import database from '../../database';
 class GameLauncher extends React.Component {
 
 	state = {
-		gameGridCreated: false,
-	}
+		created: null,
+		deployed: null,
+	};
+
+	onGameStateChange = (response) => {
+		const gameState = response.val();
+		this.setState({
+			created: true,
+			deployed: gameState.deployed[this.props.userID],
+		})
+	};
 
 	componentDidMount() {
-		database.getGameState(this.props.gameID, response => {
-			if (response.created) {
-				alert('created');
-			} else {
-				alert('not created');
-			}
-		});
+		database.listenGameState(this.props.gameID, this.onGameStateChange);
   }
 
 	render() {
-		return this.state.gameGridCreated
-			? <GameController gameID={this.props.gameID} />
-			: <GameCreator gameID={this.props.gameID} />;
+		if (this.state.created) {
+			return this.state.deployed
+				? <GameBattle gameID={this.props.gameID} />
+				: <GameCreator gameID={this.props.gameID} />;
+		}
+		return null;
 	}
 }
 
 GameLauncher.propTypes = {
 	gameID: PropTypes.string.isRequired,
+	userID: PropTypes.string.isRequired,
 }
 
-export default GameLauncher;
+const mapStateToProps = state => ({
+  userID: state.auth.uid,
+});
+
+export default connect(mapStateToProps)(GameLauncher);
