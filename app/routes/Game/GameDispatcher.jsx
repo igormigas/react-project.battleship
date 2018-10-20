@@ -19,10 +19,14 @@ class GameDispatcher extends Component {
     this.theLoop(this.props.match.params.id);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     if (!this.state.gameInitialized) {
       this.theLoop(this.props.match.params.id);
     }
+  }
+
+  redirect = (path) => {
+    this.props.history.replace(path);
   }
 
   getInitialGameConfig(gameID) {
@@ -57,23 +61,14 @@ class GameDispatcher extends Component {
     return Object.assign(getInitialGridConfig(), config);
   }
 
-  createNewGameAndRedirect() {
-    const gameID = database.getNewGameKey();
-    const gameConfig = this.getInitialGameConfig(gameID);
-    database.createNewGame(gameID, gameConfig);
-    database.registerUser(gameID, this.props.userID);
-
-    this.setState({
-      gameCreated: gameID,
+  getPlayers(obj) {
+    return Object.keys(obj).map(key => {
+      return key;
     });
-    this.props.history.replace(`/game/${gameID}`);
   }
 
   dispatchGameConfig(gameConfig) {
-    const players = gameConfig.players;
-    const playersID = Object.keys(players).map(key => {
-      return key;
-    });
+    const playersID = this.getPlayers(gameConfig.players);
 
     if (playersID.includes(this.props.userID)) {
       console.log('PLAY');
@@ -83,12 +78,26 @@ class GameDispatcher extends Component {
       });
     } else if (playersID.length === 1) {
       console.log('DO YOU WANNA PLAY ?');
-      this.props.history.replace(`/invite/${gameConfig.id}`);
+      this.redirect(`/invite/${gameConfig.id}`);
     } else if (playersID.length === 2) {
       console.log('PRIVATE GAME');
+      this.redirect(`/info/private_game`);
     } else {
-      console.log('ERROR, PROBABLY BOTH NULL, PROBLEM WITH CREATING NEW GAME');
+      console.log('ERROR DISPATCH');
+      this.redirect(`/info/game_error`);
     }
+  }
+
+  createNewGameAndRedirect() {
+    const gameID = database.getNewGameKey();
+    const gameConfig = this.getInitialGameConfig(gameID);
+    database.createNewGame(gameID, gameConfig);
+    database.registerUser(gameID, this.props.userID);
+
+    this.setState({
+      gameCreated: gameID,
+    });
+    this.redirect(`/game/${gameID}`);
   }
 
   theLoop(urlGameID) {
@@ -124,4 +133,7 @@ const mapStateToProps = state => ({
   userData: state.auth.isAuth ? state.auth.userData : null,
 });
 
-export default connect(mapStateToProps)(withRouter(GameDispatcher));
+const mapDispatchToProps = dispatch => ({
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(GameDispatcher));

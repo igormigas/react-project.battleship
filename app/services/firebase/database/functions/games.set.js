@@ -30,7 +30,7 @@ const functions = database => ({
     database
       .ref(`/games/${gameID}/details/players`)
       .once('value')
-      .then(snapshot => callback(snapshot));
+      .then(snapshot => callback(snapshot.val()));
   },
 
   getNewGameKey: () => {
@@ -58,12 +58,12 @@ const functions = database => ({
     .ref(`/games/${gameID}/details/players/${slot}`)
     .update(obj),
 
-  listenGameData: (gameID, callback) => {
+  getGameData: (gameID, callback) => {
     database
       .ref(`/games/${gameID}`)
-      .on('value', snapshot => callback(snapshot));
+      .once('value')
+      .then(snapshot => callback(snapshot.val()));
   },
-
 
   makeShot: (gameID, userID, row, col) => {
     const updates = {};
@@ -91,6 +91,12 @@ const functions = database => ({
     database
       .ref(`/games/${gameID}/state/deployed/${userID}`)
       .set(true);
+  },
+
+  listenGrids: (gameID, callback) => {
+    database
+      .ref(`/games/${gameID}/grids`)
+      .on('value', snapshot => callback(snapshot.val()));
   },
 });
 

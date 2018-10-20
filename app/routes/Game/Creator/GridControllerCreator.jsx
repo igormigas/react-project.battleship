@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '../../components/Grid';
-import * as utils from '../../functions/grid';
+import Grid from '../../../components/Grid';
+import * as utils from '../../../functions/grid';
 
 class GridControllerCreator extends React.Component {
 

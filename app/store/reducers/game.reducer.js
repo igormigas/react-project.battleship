@@ -1,6 +1,7 @@
 const initialState = {
   gameData: null,
   userGrid: null,
+  opponentID: null,
   opponentGrid: null,
 };
 
@@ -18,16 +19,17 @@ const reducer = (state = initialState, action) => {
         gameData: action.data,
       };
 
-    case 'STORE_USER_GRID':
+    case 'STORE_PLAYERS_GRIDS':
       return {
         ...state,
-        userGrid: action.data,
+        userGrid: action.grids.userGrid,
+        opponentGrid: action.grids.opponentGrid,
       };
 
-    case 'STORE_OPPONENT_GRID':
+    case 'STORE_OPPONENT_ID':
       return {
         ...state,
-        opponentGrid: action.data,
+        opponentID: action.id,
       };
 
     default:

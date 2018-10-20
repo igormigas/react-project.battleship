@@ -5,8 +5,8 @@ import { withRouter } from 'react-router';
 
 import GridControllerCreator from './GridControllerCreator';
 
-import database from '../../database';
-import gridContainer from '../../components/Grid/GridContainer';
+import database from '../../../database';
+import gridContainer from '../../../components/Grid/GridContainer';
 
 class GameCreator extends React.Component {
 

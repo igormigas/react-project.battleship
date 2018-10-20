@@ -2,38 +2,49 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import GameDashboard from '../../components/Game/Dashboard';
+import GameDashboard from '../../../components/Game/Dashboard';
 import GridControllerBattle from './GridControllerBattle';
 
-import database from '../../database';
-import gridContainer from '../../components/Grid/GridContainer';
-import classes from './Game.scss';
+import database from '../../../database';
+import classes from '../Game.scss';
+import gridContainer from '../../../components/Grid/GridContainer';
 
 class GameBattle extends React.Component {
 
   onFireHandler = (row, col) => {
-    database.makeShot(this.props.gameID, this.props.userID, row, col);
-    // alert('FIRE! Player: ' + player + ' /' + row + ':' + col);
+    database.makeShot(this.props.gameID, this.props.opponentID, row, col);
+    alert('FIRE! Player: ' + this.props.userID + ' /' + row + ':' + col);
   };
 
-  listenGameData(gameID) {
-    database.listenGameData(gameID, (snapshot) => {
-      if (snapshot.exists()) {
-        const gameData = snapshot.val();
-        const {[this.props.userID]: userGrid, ...opponentGrid} = gameData.grids;
-        console.log(userGrid);
-        this.props.storeUserGrid(new gridContainer(userGrid));
-        this.props.storeOpponentGrid(new gridContainer(opponentGrid));
+  run(gameID) {
+    database.getGamePlayers(gameID, response => {
+      const userID = this.props.userID;
+      let opponentID;
+      console.log(response);
+      for (let id in response) {
+        if (id !== this.props.userID) {
+          opponentID = id;
+          this.props.storeOpponentID(opponentID);
+        }
       }
+
+      database.listenGrids(gameID, response => {
+        this.props.storePlayersGrids(
+          new gridContainer(response[userID]),
+          new gridContainer(response[opponentID])
+        );
+      })
     });
+
+
   }
 
   componentDidMount() {
-    this.listenGameData(this.props.gameID);
+    this.run(this.props.gameID);
   };
 
   render() {
-    if (this.props.userGrid && this.props.opponentGrid) {
+    if (this.props.userGrid) {
       const userID = this.props.userID;
       const gameID = this.props.gameID;
 
@@ -58,23 +69,25 @@ class GameBattle extends React.Component {
 GameBattle.propTypes = {
   gameID: PropTypes.string.isRequired,
   userID: PropTypes.string,
+  opponentID: PropTypes.string,
   userGrid: PropTypes.object,
   opponentGrid: PropTypes.object,
   storeGameData: PropTypes.func.isRequired,
-  storeUserGrid: PropTypes.func.isRequired,
-  storeOpponentGrid: PropTypes.func.isRequired,
+  storeOpponentID: PropTypes.func.isRequired,
+  storePlayersGrids: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   userID: state.auth.uid,
+  opponentID: state.game.opponentID,
   userGrid: state.game.userGrid,
   opponentGrid: state.game.opponentGrid,
 });
 
 const mapDispatchToProps = dispatch => ({
   storeGameData: data => dispatch({ type: 'STORE_GAME_DATA', data }),
-  storeUserGrid: data => dispatch({ type: 'STORE_USER_GRID', data }),
-  storeOpponentGrid: data => dispatch({ type: 'STORE_OPPONENT_GRID', data }),
+  storeOpponentID: id => dispatch({ type: 'STORE_OPPONENT_ID', id }),
+  storePlayersGrids: (userGrid, opponentGrid) => dispatch({ type: 'STORE_PLAYERS_GRIDS', grids: {userGrid, opponentGrid} }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBattle);

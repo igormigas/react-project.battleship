@@ -2,22 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import GameBattle from './GameBattle';
-import GameCreator from './GameCreator';
+import GameBattle from './Battle/GameBattle';
+import GameCreator from './Creator/GameCreator';
 
 import database from '../../database';
 
 class GameLauncher extends React.Component {
-
 	state = {
-		created: null,
+		launch: null,
 		deployed: null,
 	};
 
 	onGameStateChange = (response) => {
 		const gameState = response.val();
 		this.setState({
-			created: true,
+			launch: true,
 			deployed: gameState.deployed[this.props.userID],
 		})
 	};
@@ -27,7 +26,7 @@ class GameLauncher extends React.Component {
   }
 
 	render() {
-		if (this.state.created) {
+		if (this.state.launch) {
 			return this.state.deployed
 				? <GameBattle gameID={this.props.gameID} />
 				: <GameCreator gameID={this.props.gameID} />;
