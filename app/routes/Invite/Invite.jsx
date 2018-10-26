@@ -3,53 +3,51 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import database from '../../database';
+import { userDetails } from '../../functions/userDataManagement';
 // import classes from './Invite.scss'
 
 class Invite extends React.Component {
   state = {
     showInvitation: null,
-    emptySlot: null,
   };
 
   componentDidMount() {
-    database.getGamePlayers(this.props.match.params.id, (response) => {
-      if (!response.exists()) {
-        // Error in game config in database
-        this.props.history.replace('/lobby');
-      } else {
-        response = response.val();
-        const playersID = response ? [
-          response[0] ? response[0].id : null,
-          response[1] ? response[1].id : null,
-        ] : [];
+    const gameID = this.props.match.params.id;
 
-        if (this.props.userData.id && playersID.includes(this.props.userData.id)) {
-          this.redirectToGame();
-        } else if (this.isOneNull(playersID[0], playersID[1])) {
-          this.setState({
-            showInvitation: true,
-            emptySlot: playersID[0] ? 1 : 0,
-          });
-        } else {
-          this.setState({
-            showInvitation: false,
-          });
-        }
-      }
+    database.getGamePlayers(gameID, (response) => {
+      console.log(response);
+      const playersID = response ? [
+        response[0] ? response[0].id : null,
+        response[1] ? response[1].id : null,
+      ] : [];
+
+      this.analyzePlayersID(response);
     });
   }
 
+  analyzePlayersID = (playersID) => {
+    let { userData } = this.props;
+
+    if (userData.id && playersID.hasOwnProperty(userData.id)) {
+      this.redirectToGame();
+    } else if (Object.keys(playersID).length === 1) {
+      this.setState({
+        showInvitation: true,
+      });
+    } else {
+      this.setState({
+        showInvitation: false,
+      });
+    }
+  }
+
   onAcceptHandler = () => {
-    database.createOpponent(this.props.match.params.id, this.state.emptySlot, {
-      id: this.props.userData.id,
-      name: {
-        first: this.props.userData.firstName,
-        last: this.props.userData.lastName,
-      },
-      picture: {
-        url: this.props.userData.picture.data.url,
-      },
-    })
+    const { match, userData } = this.props;
+    const gid = match.params.id;
+    const { uid, ...userCommonData } = userData;
+    console.log(userDetails(uid, userCommonData));
+    database
+      .createOpponent(gid, uid, userDetails(uid, userCommonData))
       .then(this.redirectToGame);
   };
 
@@ -110,10 +108,8 @@ Invite.propTypes = {
 
 const mapStateToProps = state => ({
   userData: {
-    id: state.auth.userID,
-    firstName: state.auth.userFirstName,
-    lastName: state.auth.userLastName,
-    picture: state.auth.userPicture,
+    uid: state.auth.uid,
+    ...state.auth.userData,
   },
 });
 

@@ -54,9 +54,9 @@ const functions = database => ({
       });
   },
 
-  createOpponent: (gameID, slot, obj) => database
-    .ref(`/games/${gameID}/details/players/${slot}`)
-    .update(obj),
+  createOpponent: (gameID, userID, obj) => database
+    .ref(`/games/${gameID}/details/players/${userID}`)
+    .set(obj),
 
   getGameData: (gameID, callback) => {
     database

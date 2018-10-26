@@ -29,6 +29,7 @@ class GameBattle extends React.Component {
       }
 
       database.listenGrids(gameID, response => {
+        alert('changes');
         this.props.storePlayersGrids(
           new gridContainer(response[userID]),
           new gridContainer(response[opponentID])
