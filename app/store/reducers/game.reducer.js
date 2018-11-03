@@ -1,4 +1,5 @@
 const initialState = {
+  gameID: null,
   gameData: null,
   userGrid: null,
   opponentID: null,

@@ -20,7 +20,6 @@ class firebaseAuth {
   }
 
   signUpWithEmail(username, email, password, successCallback, failCallback) {
-    console.log('PASSWORD SIGNUP');
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(transformProviderResponse)
       .then(applyDisplayName(username))
@@ -29,7 +28,6 @@ class firebaseAuth {
   }
 
   signInWithEmail(email, password, successCallback, failCallback) {
-    console.log('PASSWORD LOGIN');
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(transformProviderResponse)
       .then(successCallback)
@@ -37,7 +35,6 @@ class firebaseAuth {
   }
 
   loginWithService(service, successCallback, failCallback) {
-    console.log('SERVICE LOGIN');
     const provider = getProvider(firebase, service);
     firebase.auth().signInWithPopup(provider)
       .then(transformProviderResponse)

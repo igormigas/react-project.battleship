@@ -12,64 +12,36 @@ class Auth extends React.Component {
     errorCode: null,
   };
 
-  onLogoutHandler = () => {
-    auth.logout();
-  };
-
-  displayError(code) {
-    this.setState({
-      errorCode: code,
-    });
-  }
-
-  /*
-    codes:
-      auth/invalid-email
-      auth/user-disabled
-      auth/user-not-found
-      auth/wrong-password
-    message
-    */
-
   onServiceLoginSuccess = (response) => {
     const { isNewUser, ...userData } = response;
     if (isNewUser) {
-      console.log('SERVICE LOGIN: NEW USER');
       database.createNewUser(userData);
     } else {
-      console.log('SERVICE LOGIN: old USER');
       database.updateUser(userData);
     }
-    console.log(response);
     this.props.history.replace('/');
   };
 
   onServiceLoginFailure = (response) => {
-    console.log('SERVICE LOGIN FAILURE CALLBACK', response);
     this.displayError(response.code);
   };
 
   onEmailSignUpSuccess = (response) => {
     const { isNewUser, ...userData } = response;
-    console.log(userData);
     database.createNewUser(userData);
     this.props.history.replace('/');
   };
 
   onEmailSignUpFailure = (response) => {
-    console.log('FIREBASE SIGN UP ERROR: ', response.code, response.message);
     this.displayError(response.code);
   };
 
   onEmailSignInSuccess = (response) => {
-    console.log('[EMAIL SIGNIN SUCCESS', response);
-    const { uid } = response;
-    database.updateLastLoginTimestamp(uid);
+    database.updateLastLoginTimestamp(response.uid);
     this.props.history.replace('/');
   };
 
   onEmailSignInFailure = (response) => {
-    console.log('[EMAIL SIGNIN FAIL', response);
     this.displayError(response.code);
   };
 
@@ -95,6 +67,14 @@ class Auth extends React.Component {
   onServiceLoginSubmit = (service) => {
     auth.loginWithService(service, this.onServiceLoginSuccess, this.onServiceLoginFailure);
   };
+
+  onLogoutHandler = () => {
+    auth.logout();
+  };
+
+  displayError(code) {
+    this.setState({ errorCode: code });
+  }
 
   componentDidMount() {
     if (this.props.match.params.mode === 'logout') {

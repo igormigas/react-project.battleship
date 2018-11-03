@@ -3,21 +3,6 @@ const initialState = {
   data: {},
 };
 
-/*
-const flattenUserData = data => {
-  return {
-    uid:                  data.uid,
-    firstName:            data.profile.firstName,
-    lastName:             data.profile.lastName,
-    email:                data.profile.email,
-    picture:              data.profile.picture,
-    providerUid:          data.authProvider.providerUid,
-    providerName:         data.authProvider.providerName,
-    providerAccessToken:  data.authProvider.providerAccessToken,
-    score:                data.score
-  };
-}; */
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'USER_AUTHENTICATED':

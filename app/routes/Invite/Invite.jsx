@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import InviteError from './components/InviteError';
+import InviteJoin from './components/InviteJoin';
+
 import database from '../../database';
 import { userDetails } from '../../functions/userDataManagement';
 // import classes from './Invite.scss'
@@ -11,91 +14,77 @@ class Invite extends React.Component {
     showInvitation: null,
   };
 
-  componentDidMount() {
+  showInvitation = () => {
+    this.setState({showInvitation: true});
+  };
+
+  showError = () => {
+    this.setState({showInvitation: false});
+  };
+
+  redirectToGame = () => {
     const gameID = this.props.match.params.id;
+    this.props.history.replace(`/game/${gameID}`);
+  };
 
-    database.getGamePlayers(gameID, (response) => {
-      console.log(response);
-      const playersID = response ? [
-        response[0] ? response[0].id : null,
-        response[1] ? response[1].id : null,
-      ] : [];
-
-      this.analyzePlayersID(response);
-    });
-  }
-
-  analyzePlayersID = (playersID) => {
-    let { userData } = this.props;
-
-    if (userData.id && playersID.hasOwnProperty(userData.id)) {
-      this.redirectToGame();
-    } else if (Object.keys(playersID).length === 1) {
-      this.setState({
-        showInvitation: true,
-      });
-    } else {
-      this.setState({
-        showInvitation: false,
-      });
-    }
-  }
+  redirectToLobby = () => {
+    this.props.history.push('/');
+  };
 
   onAcceptHandler = () => {
     const { match, userData } = this.props;
-    const gid = match.params.id;
+    const gameID = match.params.id;
     const { uid, ...userCommonData } = userData;
-    console.log(userDetails(uid, userCommonData));
     database
-      .createOpponent(gid, uid, userDetails(uid, userCommonData))
+      .createOpponent(gameID, uid, userDetails(uid, userCommonData))
       .then(this.redirectToGame);
   };
 
   onRefuseHandler = () => {
-    this.props.history.push('/');
+    this.redirectToLobby();
   };
 
-  redirectToGame = () => {
-    this.props.history.replace(`/game/${this.props.match.params.id}`);
+  onConfirmHandler = () => {
+    this.redirectToLobby();
   };
 
-  isOneNull = (...args) => {
-    console.log(args);
-    // return (args[0] && !args[1]) || (!args[0] && args[1]);
-    const nulls = args.reduce((prev, next) => (next === null ? prev + 1 : prev), 0);
-    return nulls === 1;
-  };
+  processGamePlayers = (gamePlayers) => {
+    const { userData } = this.props;
+    const playersID = gamePlayers ? Object.keys(gamePlayers) : [];
+
+    if (userData.id && playersID[userData.id]) {
+      this.redirectToGame();
+    } else if (playersID.length === 1) {
+      this.showInvitation();
+    } else {
+      this.showError();
+    }
+  }
+
+  componentDidMount() {
+    const gameID = this.props.match.params.id;
+    database.getGamePlayers(gameID, this.processGamePlayers);
+  }
 
   render() {
-    let content;
     switch (this.state.showInvitation) {
       case true:
-        content = (
-          <div>
-          Czy chcesz dołączyć do gry?
-            <button onClick={this.onAcceptHandler}>Yes!</button>
-            <button onClick={this.onRefuseHandler}>Naah..</button>
-          </div>
+        return (
+          <InviteJoin
+            onAcceptHandler={this.onAcceptHandler}
+            onRefuseHandler={this.onRefuseHandler}
+          />
         );
-        break;
-
       case false:
-        content = (
-          <div>
-          Nie ma, zajęte!
-          </div>
+        return (
+          <InviteError
+            text="Eoeoeo"
+            onConfirmHandler={this.onConfirmHandler}
+          />
         );
-        break;
-
       default:
-        content = 'Spinner';
+        return 'Spinner';
     }
-
-    return (
-      <div>
-        {content}
-      </div>
-    );
   }
 }
 
