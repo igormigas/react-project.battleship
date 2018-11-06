@@ -33,6 +33,18 @@ const functions = database => ({
       .then(snapshot => callback(snapshot.val()));
   },
 
+  listenGamePlayers: (gameID, callback) => {
+    database
+      .ref(`/games/${gameID}/details/players`)
+      .on('value', snapshot => callback(snapshot.val()));
+  },
+
+  stopListeningGamePlayers: (gameID) => {
+    database
+      .ref(`/games/${gameID}/details/players`)
+      .off();
+  },
+
   getNewGameKey: () => {
     const ref = database.ref('/games');
     const key = ref.push().key;
@@ -65,10 +77,10 @@ const functions = database => ({
       .then(snapshot => callback(snapshot.val()));
   },
 
-  makeShot: (gameID, userID, row, col) => {
+  makeShot: (gameID, targetID, row, col) => {
     const updates = {};
-    updates[`/grids/${userID}/${row}/${col}/shot`] = true;
-    updates['/lastShot'] = userID;
+    updates[`/grids/${targetID}/${row}/${col}/shot`] = true;
+    updates['/nextShooter'] = targetID;
     database
       .ref(`/games/${gameID}`)
       .update(updates);
@@ -97,6 +109,13 @@ const functions = database => ({
     database
       .ref(`/games/${gameID}/grids`)
       .on('value', snapshot => callback(snapshot.val()));
+  },
+
+  getNextShooterID: (gameID, callback) => {
+    database
+      .ref(`/games/${gameID}/nextShooter`)
+      .once('value')
+      .then(snapshot => callback(snapshot.exists() ? snapshot.val() : null));
   },
 });
 

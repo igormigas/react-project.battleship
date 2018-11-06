@@ -5,7 +5,6 @@ import Grid from '../../../components/Grid';
 import * as utils from '../../../functions/grid';
 
 class GridControllerBattle extends React.Component {
-
 	state = {
     hovering: false,
     hoverRow: null,
@@ -44,7 +43,7 @@ class GridControllerBattle extends React.Component {
 }
 
 GridControllerBattle.propTypes = {
-	gridContainer: PropTypes.object.isRequired,
+	gridContainer: PropTypes.object,
   clickEvent: PropTypes.func.isRequired,
 }
 

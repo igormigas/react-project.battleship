@@ -3,19 +3,17 @@ import PropTypes from 'prop-types';
 
 import Chat from '../Chat';
 
-class Dashboard extends React.Component {
-  render() {
-    const gameLink = `${window.location.protocol}//${window.location.host}/invite/${this.props.gameID}`;
+const Dashboard = ({ gameID }) => {
+  const gameLink = `${window.location.protocol}//${window.location.host}/invite/${gameID}`;
 
-    return (
-      <div className="Dashboard">
-        <h1>Welcome</h1>
-        Invite your friend with following link:
-        <input type="text" value={gameLink} readOnly />
-        {this.props.gameID ? <Chat gameID={this.props.gameID} /> : null}
-      </div>
-    );
-  }
+  return (
+    <div className="Dashboard">
+      <h1>Welcome</h1>
+      Invite your friend with following link:
+      <input type="text" value={gameLink} readOnly />
+      {gameID ? <Chat gameID={gameID} /> : null}
+    </div>
+  );
 }
 
 Dashboard.propTypes = {

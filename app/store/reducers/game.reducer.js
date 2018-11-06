@@ -1,9 +1,10 @@
 const initialState = {
   gameID: null,
   gameData: null,
-  userGrid: null,
   opponentID: null,
+  userGrid: null,
   opponentGrid: null,
+  nextShooterID: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -14,23 +15,29 @@ const reducer = (state = initialState, action) => {
         gameID: action.id,
       };
 
-    case 'STORE_GAME_DATA':
+    // deprecated
+    case 'STORE_USER_GRID':
       return {
         ...state,
-        gameData: action.data,
+        userGrid: action.grid,
       };
 
-    case 'STORE_PLAYERS_GRIDS':
+    case 'STORE_OPPONENT_GRID':
       return {
         ...state,
-        userGrid: action.grids.userGrid,
-        opponentGrid: action.grids.opponentGrid,
+        opponentGrid: action.grid,
       };
 
     case 'STORE_OPPONENT_ID':
       return {
         ...state,
         opponentID: action.id,
+      };
+
+    case 'STORE_NEXT_SHOOTER_ID':
+      return {
+        ...state,
+        nextShooterID: action.id,
       };
 
     default:

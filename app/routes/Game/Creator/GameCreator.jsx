@@ -22,7 +22,6 @@ class GameCreator extends React.Component {
   };
 
   onClickHandler = (row, col, shipCords=null) => {
-    console.log('ship placed');
     if (this.state.deploying) {
       this.state.gridContainer.createShip({
         row,

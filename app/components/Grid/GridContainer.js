@@ -1,9 +1,10 @@
 import { createNewGrid } from '../../functions/initial';
 
 export default class GridContainer {
-	constructor(obj={}) {
+	constructor(obj = {}, hidden = false) {
 		this.Grid = {};
 		this.Ships = [];
+		this.hidden = hidden;
 
 		if (Object.keys(obj).length) {
 			this.install(obj);
@@ -49,12 +50,17 @@ export default class GridContainer {
 
 	getFieldType(row, col) {
 		const def = this.getFieldDefinition(row, col);
+		let type = false;
+
 		if (!def.ship) {
-			return !def.shot ? 0 : 1;
+			type = !def.shot ? 1 : 2;
 		} else {
-			return !def.shot ? 2 : 3;
+			type = !def.shot ? 3 : 4;
 		}
-		return false;
+		if (type === 3 && this.hidden) {
+			type = 1;
+		}
+		return type;
 	};
 
 	setField(row, col, obj) {
