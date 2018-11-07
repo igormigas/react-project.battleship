@@ -2,14 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import GameDashboard from '../../../components/Game/Dashboard';
 import GridControllerBattle from './GridControllerBattle';
+import Dashboard from './components/Dashboard';
+import PlayerHud from './components/PlayerHud';
 
 import database from '../../../database';
 import classes from '../Game.scss';
 import gridContainer from '../../../components/Grid/GridContainer';
 
 class GameBattle extends React.Component {
+
+  state = {
+    isOpponentActive: false,
+  }
 
   onFireHandler = (row, col) => {
     const { gameID, userID, opponentID, nextShooterID } = this.props;
@@ -31,6 +36,13 @@ class GameBattle extends React.Component {
     return null;
   }
 
+  debugAlertPresence = (bool) => {
+    console.warn('Opponent is online: ' + bool);
+    this.setState({
+      isOpponentActive: bool,
+    })
+  }
+
   initialize() {
     const { gameID, userID } = this.props;
     const { storeOpponentID, storeUserGrid, storeOpponentGrid, storeNextShooterID } = this.props;
@@ -40,8 +52,11 @@ class GameBattle extends React.Component {
       const count = Object.keys(response).length;
       if (count === 2) {
         opponentID = this.retrieveOpponentID(response);
+
         storeOpponentID(opponentID);
         database.stopListeningGamePlayers(gameID);
+        database.initUserPresenceSystem(gameID, userID);
+        database.opponentPresenceListener(gameID, opponentID, this.debugAlertPresence);
       }
     });
 
@@ -58,8 +73,15 @@ class GameBattle extends React.Component {
     this.initialize();
   };
 
+  componentWillUnmount() {
+    const { gameID, opponentID } = this.props;
+    database.cancelUserPresenceSystem(gameID, opponentID);
+    database.cancelOpponentPresenceListener(gameID, opponentID);
+  }
+
   render() {
-    const { gameID, userID, userGrid, opponentGrid  } = this.props;
+    const { gameID, userID, opponentID, userGrid, opponentGrid  } = this.props;
+    const { isOpponentActive } = this.state;
 
     const userComponent = userGrid ? (
       <GridControllerBattle
@@ -76,11 +98,18 @@ class GameBattle extends React.Component {
 
     if (userGrid) {
       return (
+        <>
+        <PlayerHud
+          uid={opponentID}
+          name={'Opponent'}
+          isActive={isOpponentActive}
+        />
         <section className={classes.Game}>
-          <GameDashboard gameID={gameID} />
+          <Dashboard gameID={gameID} />
           {userComponent}
           {opponentComponent}
         </section>
+        </>
       );
     }
     return null;

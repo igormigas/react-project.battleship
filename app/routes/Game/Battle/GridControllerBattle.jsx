@@ -44,7 +44,7 @@ class GridControllerBattle extends React.Component {
 
 GridControllerBattle.propTypes = {
 	gridContainer: PropTypes.object,
-  clickEvent: PropTypes.func.isRequired,
+  clickEvent: PropTypes.func,
 }
 
 export default GridControllerBattle;

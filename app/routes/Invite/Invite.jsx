@@ -51,8 +51,8 @@ class Invite extends React.Component {
   processGamePlayers = (gamePlayers) => {
     const { userData } = this.props;
     const playersID = gamePlayers ? Object.keys(gamePlayers) : [];
-
-    if (userData.id && playersID[userData.id]) {
+    console.warn(playersID, userData.uid);
+    if (userData.uid && playersID[userData.uid]) {
       this.redirectToGame();
     } else if (playersID.length === 1) {
       this.showInvitation();

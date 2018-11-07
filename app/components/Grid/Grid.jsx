@@ -58,7 +58,7 @@ class Grid extends React.Component {
 
 Grid.propTypes = {
 	gridContainer: PropTypes.object,
-  clickEvent: PropTypes.func.isRequired,
+  clickEvent: PropTypes.func,
   mouseEnterEvent: PropTypes.func.isRequired,
   mouseLeaveEvent: PropTypes.func.isRequired,
   isHovered: PropTypes.func.isRequired,

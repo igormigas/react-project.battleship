@@ -1,15 +1,15 @@
-import { createNewGrid } from './initial';
-
-export function isString(value) {
-  return typeof value === 'string' || value instanceof String;
-}
-
-export function isObject(value) {
-  return value === Object(value);
-}
-
-export function isInteger(value, strict = false) {
-  return Number.isInteger(strict ? value : +value);
+export function createNewGrid(x = 9, y = 9) {
+  const grid = {};
+  for (let i=1; i<=x; i++) {
+    grid[i] = {};
+    for (let j=1; j<=y; j++) {
+      grid[i][j] = {
+        ship: false,
+        shot: false,
+      };
+    }
+  }
+  return grid;
 }
 
 export function countFieldsLeft(matrix, position) {
@@ -32,6 +32,18 @@ export function countFieldsBottom(matrix, position) {
   const row = isObject(position) && position.hasOwnProperty('row') ? position.row : position;
   const maxRows = Object.keys(matrix).length;
   return maxRows - charToInt(row);
+}
+
+export function isString(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+export function isObject(value) {
+  return value === Object(value);
+}
+
+export function isInteger(value, strict = false) {
+  return Number.isInteger(strict ? value : +value);
 }
 
 export function charToInt(char) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Chat from '../Chat';
+import Chat from '../../../Chat';
 
 const Dashboard = ({ gameID }) => {
   const gameLink = `${window.location.protocol}//${window.location.host}/invite/${gameID}`;

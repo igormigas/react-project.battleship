@@ -1,4 +1,4 @@
-import { createNewGrid } from '../../functions/initial';
+import { createNewGrid } from '../../functions/grid';
 
 export default class GridContainer {
 	constructor(obj = {}, hidden = false) {

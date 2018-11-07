@@ -3,7 +3,7 @@ const functions = database => ({
     database
       .ref(`/games/${gameID}/details`)
       .once('value')
-      .then(snapshot => callback(snapshot));
+      .then(snapshot => callback(snapshot.val()));
   },
 
   getGameData: (gameID, callback) => {
@@ -51,19 +51,14 @@ const functions = database => ({
     return key;
   },
 
-  createNewGame: (gameID, obj) => {
+  createNewGame: (gameID, userID, obj) => {
+    console.warn(obj);
     database
-      .ref('/games')
-      .child(gameID)
+      .ref(`/games/${gameID}`)
       .set(obj);
-  },
-
-  registerUser: (gameID, userID) => {
     database
-      .ref(`/users/${userID}/games`)
-      .set({
-        [gameID]: true,
-      });
+      .ref(`/users/${userID}/games/${gameID}`)
+      .set(true);
   },
 
   createOpponent: (gameID, userID, obj) => database
@@ -117,6 +112,40 @@ const functions = database => ({
       .once('value')
       .then(snapshot => callback(snapshot.exists() ? snapshot.val() : null));
   },
+
+  initUserPresenceSystem: (gameID, userID) => {
+    const connectionsRef = database.ref(`users/${userID}/connections/${gameID}`);
+    const lastOnlineRef = database.ref(`users/${userID}/lastOnline`);
+    const connectedRef = database.ref('.info/connected');
+    connectedRef.on('value', snapshot => {
+      if (snapshot.val() === true) {
+        connectionsRef.onDisconnect().remove();
+        connectionsRef.set(true);
+        lastOnlineRef.onDisconnect().set(Date.now() / 1000 | 0);
+      }
+    });
+  },
+
+  cancelUserPresenceSystem: (gameID, userID) => {
+    const connectionsRef = database.ref(`users/${userID}/connections/${gameID}`);
+    connectionsRef.onDisconnect().cancel();
+    const connectedRef = database.ref('.info/connected');
+    connectedRef.off();
+  },
+
+  opponentPresenceListener: (gameID, opponentID, callback) => {
+    const connectionsRef = database.ref(`users/${opponentID}/connections/${gameID}`);
+    connectionsRef.on('value', (snapshot) => {
+      callback(snapshot.exists());
+    });
+  },
+
+  cancelOpponentPresenceListener: (gameID, opponentID) => {
+    const connectionsRef = database.ref(`users/${opponentID}/connections/${gameID}`);
+    connectionsRef.off();
+  },
+
+
 });
 
 export default functions;

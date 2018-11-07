@@ -77,7 +77,7 @@ square.propTypes = {
   col: PropTypes.number.isRequired,
   type: PropTypes.number,
   hovered: PropTypes.bool,
-  clickEvent: PropTypes.func.isRequired,
+  clickEvent: PropTypes.func,
   mouseEnterEvent: PropTypes.func.isRequired,
   mouseLeaveEvent: PropTypes.func.isRequired,
 };
