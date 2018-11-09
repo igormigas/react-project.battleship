@@ -1,6 +1,6 @@
 const functions = database => ({
 
-	getUserActiveGames: (uid, callback) => {
+  getUserActiveGames: (uid, callback) => {
     database
       .ref(`/users/${uid}/games`)
       .once('value')

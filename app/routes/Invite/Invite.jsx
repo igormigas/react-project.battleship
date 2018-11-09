@@ -15,11 +15,11 @@ class Invite extends React.Component {
   };
 
   showInvitation = () => {
-    this.setState({showInvitation: true});
+    this.setState({ showInvitation: true });
   };
 
   showError = () => {
-    this.setState({showInvitation: false});
+    this.setState({ showInvitation: false });
   };
 
   redirectToGame = () => {
@@ -59,7 +59,7 @@ class Invite extends React.Component {
     } else {
       this.showError();
     }
-  }
+  };
 
   componentDidMount() {
     const gameID = this.props.match.params.id;

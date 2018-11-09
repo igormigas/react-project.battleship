@@ -17,7 +17,7 @@ class GameDispatcher extends Component {
 
   redirect = (path) => {
     this.props.history.replace(path);
-  }
+  };
 
   launchGame(gameID) {
     this.setState({
@@ -36,9 +36,9 @@ class GameDispatcher extends Component {
     } else if (playersID.length === 1) {
       this.redirect(`/invite/${gameID}`);
     } else if (playersID.length === 2) {
-      this.redirect(`/info/private_game`);
+      this.redirect('/info/private_game');
     } else {
-      this.redirect(`/info/game_error`);
+      this.redirect('/info/game_error');
     }
   }
 
@@ -98,6 +98,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(GameDispatcher));

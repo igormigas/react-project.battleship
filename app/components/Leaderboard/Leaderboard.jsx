@@ -16,7 +16,7 @@ class Leaderboard extends React.Component {
         topUsers: result,
       });
     });
-  }
+  };
 
   render() {
     const items = this.state.topUsers.length ? this.state.topUsers.map(user => (

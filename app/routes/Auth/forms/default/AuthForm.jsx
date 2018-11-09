@@ -28,7 +28,8 @@ class AuthForm extends React.Component {
       <div className={classes.FormContainer}>
         <SidePanelComponent
           signUp={this.state.showSignUpForm}
-          onToggleModeEvent={this.onToggleFormHandler} />
+          onToggleModeEvent={this.onToggleFormHandler}
+        />
         <div className={classes.Form}>
           <ErrorBox code={this.props.errorCode} />
           { this.state.showSignUpForm

@@ -13,6 +13,6 @@ const InviteError = ({ text, onConfirmHandler }) => (
 InviteError.propTypes = {
   text: PropTypes.string,
   onConfirmHandler: PropTypes.func.isRequired,
-}
+};
 
 export default InviteError;

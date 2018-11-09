@@ -4,22 +4,21 @@ import PropTypes from 'prop-types';
 import classes from './SidePanelComponent.scss';
 
 const sidePanelComponent = (props) => {
+  let header, description, toggler;
 
-	let header, description, toggler;
-
-	if (props.signUp) {
-		header = 'Sign up';
-		description = 'Join the game and challange your friends';
-		toggler = 'Sign in';
-	} else {
-		header = 'Sign in';
-		description = 'Continue your challange';
-		toggler = 'Sign up';
-	}
+  if (props.signUp) {
+    header = 'Sign up';
+    description = 'Join the game and challange your friends';
+    toggler = 'Sign in';
+  } else {
+    header = 'Sign in';
+    description = 'Continue your challange';
+    toggler = 'Sign up';
+  }
 
 
-	return (
-		<div className={classes.SidePanel}>
+  return (
+    <div className={classes.SidePanel}>
       <div className={classes.TopContent}>
         <h2>{header}</h2>
         <p>{description}</p>
@@ -33,12 +32,12 @@ const sidePanelComponent = (props) => {
         </button>
       </div>
     </div>
-	);
+  );
 };
 
 sidePanelComponent.propTypes = {
-	signUp: PropTypes.bool.isRequired,
-	onToggleModeEvent: PropTypes.func.isRequired,
-}
+  signUp: PropTypes.bool.isRequired,
+  onToggleModeEvent: PropTypes.func.isRequired,
+};
 
 export default sidePanelComponent;

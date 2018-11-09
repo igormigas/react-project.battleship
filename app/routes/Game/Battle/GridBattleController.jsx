@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '../../../components/Grid';
+import GridRenderer from '../../../components/Grid/GridRenderer';
 import * as utils from '../../../functions/grid';
 
-class GridControllerBattle extends React.Component {
-	state = {
+class GridBattleController extends React.Component {
+  state = {
     hovering: false,
     hoverRow: null,
     hoverCol: null,
@@ -27,24 +27,24 @@ class GridControllerBattle extends React.Component {
 
   isHovered = (row, col) => {
     return this.state.hovering && row === this.state.hoverRow && col === this.state.hoverCol;
-	}
+  };
 
-	render() {
-		return (
-			<Grid
-				gridContainer={this.props.gridContainer}
-			  clickEvent={this.props.clickEvent}
-			  mouseEnterEvent={this.onMouseEnterSquareHandler}
-			  mouseLeaveEvent={this.onMouseLeaveSquareHandler}
-			  isHovered={this.isHovered}
-			/>
-		);
-	};
+  render() {
+    return (
+      <GridRenderer
+        grid={this.props.grid}
+        clickEvent={this.props.clickEvent}
+        mouseEnterEvent={this.onMouseEnterSquareHandler}
+        mouseLeaveEvent={this.onMouseLeaveSquareHandler}
+        isHovered={this.isHovered}
+      />
+    );
+  }
 }
 
-GridControllerBattle.propTypes = {
-	gridContainer: PropTypes.object,
+GridBattleController.propTypes = {
+  grid: PropTypes.object.isRequired,
   clickEvent: PropTypes.func,
-}
+};
 
-export default GridControllerBattle;
+export default GridBattleController;

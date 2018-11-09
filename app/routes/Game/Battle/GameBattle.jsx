@@ -2,29 +2,43 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import GridControllerBattle from './GridControllerBattle';
+import GridBattleController from './GridBattleController';
 import Dashboard from './components/Dashboard';
 import PlayerHud from './components/PlayerHud';
 
+import GameController from '../../../utils/GameController';
 import database from '../../../database';
 import classes from '../Game.scss';
-import gridContainer from '../../../components/Grid/GridContainer';
 
 class GameBattle extends React.Component {
-
   state = {
     isOpponentActive: false,
-  }
+  };
+
+  controller = new GameController();
 
   onFireHandler = (row, col) => {
     const { gameID, userID, opponentID, nextShooterID } = this.props;
-    if (nextShooterID === userID) {
-      database.makeShot(gameID, opponentID, row, col);
-      // DEBUG
-      alert('FIRE! Player: ' + userID + ' /' + row + ':' + col);
-    } else {
-      alert('next player round');
+    const controller = this.controller;
+
+    if (nextShooterID !== userID) {
+      alert('Next player round!');
+      return false;
     }
+
+    if (!controller.isNewShot(row, col)) {
+      alert('There is no point to hit the same spot. Try a different one!');
+    }
+
+    const { damage, effect } = controller.applyDamage(row, col);
+    if (damage) {
+      database.updateShipsWithDamage(gameID, opponentID, damage);
+    }
+    database.updateGridWithShot(gameID, opponentID, row, col);
+    database.changePlayerTurn(gameID, opponentID);
+
+    this.setState(this.state);
+    alert('FIRE! Player: ' + userID + ' /' + row + ':' + col);
   };
 
   retrieveOpponentID = (players) => {
@@ -34,82 +48,92 @@ class GameBattle extends React.Component {
       }
     }
     return null;
-  }
+  };
 
-  debugAlertPresence = (bool) => {
-    console.warn('Opponent is online: ' + bool);
+  setOpponentState = (bool) => {
     this.setState({
       isOpponentActive: bool,
-    })
-  }
+    });
+  };
 
   initialize() {
+    console.log(this);
     const { gameID, userID } = this.props;
-    const { storeOpponentID, storeUserGrid, storeOpponentGrid, storeNextShooterID } = this.props;
+    const { storeOpponentID, storeNextShooterID } = this.props;
     let opponentID = null;
 
-    database.listenGamePlayers(gameID, response => {
+    database.initGamePlayersListener(gameID, response => {
       const count = Object.keys(response).length;
       if (count === 2) {
         opponentID = this.retrieveOpponentID(response);
-
         storeOpponentID(opponentID);
-        database.stopListeningGamePlayers(gameID);
-        database.initUserPresenceSystem(gameID, userID);
-        database.opponentPresenceListener(gameID, opponentID, this.debugAlertPresence);
+        database.cancelGamePlayersListener(gameID);
+        database.initUserPresenceListener(gameID, userID);
+        database.initOpponentPresenceListener(gameID, opponentID, this.setOpponentState);
       }
     });
 
-    database.listenGrids(gameID, response => {
-      storeUserGrid(new gridContainer(response[userID]));
+    database.initGridsListener(gameID, ({ grids, ships }) => {
+      this.controller.storeUserGrid(grids[userID]);
+      this.controller.storeUserShips(ships[userID]);
       if (opponentID) {
-        storeOpponentGrid(new gridContainer(response[opponentID], true));
+        this.controller.storeOpponentGrid(grids[opponentID]);
+        this.controller.storeOpponentShips(ships[opponentID]);
       }
-      database.getNextShooterID(gameID, storeNextShooterID);
+      database.getNextShooterID(gameID, id => {
+        storeNextShooterID(id);
+      });
+      this.setState(this.state);
     });
   }
 
   componentDidMount() {
     this.initialize();
-  };
+  }
 
   componentWillUnmount() {
-    const { gameID, opponentID } = this.props;
-    database.cancelUserPresenceSystem(gameID, opponentID);
+    const { gameID, opponentID, clearGameStateMemory } = this.props;
+
+    database.cancelUserPresenceListener(gameID, opponentID);
     database.cancelOpponentPresenceListener(gameID, opponentID);
+    database.cancelGridsListener(gameID);
+    clearGameStateMemory();
   }
 
   render() {
-    const { gameID, userID, opponentID, userGrid, opponentGrid  } = this.props;
+    const { gameID, userID, opponentID } = this.props;
     const { isOpponentActive } = this.state;
+    const userGrid = this.controller.getUserGrid();
+    const opponentGrid = this.controller.getOpponentGrid();
 
     const userComponent = userGrid ? (
-      <GridControllerBattle
-        gridContainer={userGrid}
+      <GridBattleController
+        grid={userGrid}
       />
     ) : 'Spinner';
 
     const opponentComponent = opponentGrid ? (
-      <GridControllerBattle
-        gridContainer={opponentGrid}
+      <GridBattleController
+        grid={opponentGrid}
         clickEvent={this.onFireHandler}
       />
     ) : 'Spinner';
 
+    const playerHud = (
+      <PlayerHud
+        uid={opponentID}
+        name={'Opponent'}
+        isActive={isOpponentActive}
+      />
+    );
+
     if (userGrid) {
       return (
-        <>
-        <PlayerHud
-          uid={opponentID}
-          name={'Opponent'}
-          isActive={isOpponentActive}
-        />
         <section className={classes.Game}>
           <Dashboard gameID={gameID} />
           {userComponent}
           {opponentComponent}
         </section>
-        </>
       );
     }
     return null;
@@ -121,27 +145,21 @@ GameBattle.propTypes = {
   userID: PropTypes.string,
   opponentID: PropTypes.string,
   nextShooterID: PropTypes.string,
-  userGrid: PropTypes.object,
-  opponentGrid: PropTypes.object,
   storeOpponentID: PropTypes.func.isRequired,
-  storeUserGrid: PropTypes.func.isRequired,
-  storeOpponentGrid: PropTypes.func.isRequired,
   storeNextShooterID: PropTypes.func.isRequired,
+  clearGameStateMemory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   userID: state.auth.uid,
   opponentID: state.game.opponentID,
   nextShooterID: state.game.nextShooterID,
-  userGrid: state.game.userGrid,
-  opponentGrid: state.game.opponentGrid,
 });
 
 const mapDispatchToProps = dispatch => ({
   storeOpponentID: id => dispatch({ type: 'STORE_OPPONENT_ID', id }),
-  storeUserGrid: grid => dispatch({ type: 'STORE_USER_GRID', grid }),
-  storeOpponentGrid: grid => dispatch({ type: 'STORE_OPPONENT_GRID', grid }),
-  storeNextShooterID: id => dispatch({ type: 'STORE_NEXT_SHOOTER_ID', id })
+  storeNextShooterID: id => dispatch({ type: 'STORE_NEXT_SHOOTER_ID', id }),
+  clearGameStateMemory: () => dispatch({ type: 'CLEAR_GAME_MEMORY' }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBattle);

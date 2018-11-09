@@ -8,7 +8,7 @@ const serviceLoginButton = props => (
     src={props.imageUrl}
     alt={props.label}
     onClick={props.onClickHandler}
-    style={{width: '40px', margin: '5px'}}
+    style={{ width: '40px', margin: '5px' }}
   />
 );
 

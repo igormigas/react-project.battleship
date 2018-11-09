@@ -3,32 +3,37 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import GridControllerCreator from './GridControllerCreator';
+import CreatorGridController from './CreatorGridController';
 
+import GameController from '../../../utils/GameController';
 import database from '../../../database';
-import gridContainer from '../../../components/Grid/GridContainer';
 
 class GameCreator extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.controller = new GameController();
+    this.controller.startShipsDeployment();
+  }
 
   state = {
-    fields: null,
     shipList: [],
     deploying: false,
+    shipsDeployed: false,
     shipLength: null,
-    shipOrientation: false,
+    shipHorizontal: true,
     shipNumber: 0,
     shipMaxNumber: 3,
-    shipsDeployed: false,
   };
 
-  onClickHandler = (row, col, shipCords=null) => {
-    if (this.state.deploying) {
-      this.state.gridContainer.createShip({
-        row,
-        col,
-        shipCords,
-        shipOrientation: this.state.shipOrientation,
-      });
+  onClickHandler = (row, col) => {
+    console.log('click');
+  };
+
+  onShipPlaceHandler = (oRow, oCol) => {
+    const { deploying, shipLength, shipHorizontal } = this.state;
+    if (deploying) {
+      this.controller.createNewShip(oRow, oCol, shipLength, shipHorizontal);
       this.finishShipCreation();
     }
   };
@@ -39,10 +44,16 @@ class GameCreator extends React.Component {
     } else {
       this.setState(prev => ({
         deploying: true,
-        shipLength: Math.round(Math.random()*4)+1,
+        shipLength: Math.round(Math.random() * 4) + 1,
       }));
     }
-  }
+  };
+
+  changeShipOrientation = () => {
+    this.setState(prev => ({
+      shipHorizontal: !prev.shipHorizontal,
+    }));
+  };
 
   finishShipCreation = () => {
     this.setState(prev => ({
@@ -53,62 +64,53 @@ class GameCreator extends React.Component {
     this.setState(prev => ({
       shipsDeployed: prev.shipNumber === prev.shipMaxNumber,
     }));
-  }
+  };
 
   cancelShipCreation = () => {
-    this.setState(prev => ({
+    this.setState({
       deploying: false,
       shipLength: null,
-    }));
-  }
-
-  changeShipOrientation = () => {
-    this.setState(prev => ({
-      shipOrientation: !prev.shipOrientation,
-    }));
-  }
-
-  finishDeployment = () => {
-    database.savePlayerGrid(
-      this.props.gameID,
-      this.props.userID,
-      this.state.gridContainer.getGrid()
-    );
-    database.setGameStateDeployed(this.props.gameID, this.props.userID);
-  }
-
-  componentDidMount = () => {
-    this.setState({
-      gridContainer: new gridContainer(),
     });
   };
 
+  finishDeployment = () => {
+    const { gameID, userID } = this.props;
+    const controller = this.controller;
+    const grid = controller.exportUserGrid();
+    const ships = controller.exportUserShips();
+
+    database.savePlayerFleet(gameID, userID, grid, ships);
+    database.setGameStateDeployed(gameID, userID);
+  };
+
+  componentDidMount = () => {
+  };
+
   render() {
-    if (this.state.gridContainer) {
-      return (
-        <div>
-          Create your ships ({this.state.shipNumber}/{this.state.shipMaxNumber}):
-          <button onClick={this.startShipCreation}>Start</button>
-          <button onClick={this.cancelShipCreation}>Stop</button>
-          <button onClick={this.changeShipOrientation}>Stop</button>
-          <GridControllerCreator
-            gridContainer={this.state.gridContainer}
-            deploying={this.state.deploying}
-            shipLength={this.state.shipLength}
-            shipOrientation={this.state.shipOrientation}
-            clickEvent={this.onClickHandler}
-          />
-          <button onClick={this.finishDeployment} disabled={!this.state.shipsDeployed}>Finish Deployment</button>
-        </div>
-      );
-    }
-    return null;
+    console.warn(this.controller);
+    return (
+      <div>
+        Create your ships ({this.state.shipNumber}/{this.state.shipMaxNumber}):
+        <button onClick={this.startShipCreation}>Start</button>
+        <button onClick={this.cancelShipCreation}>Stop</button>
+        <button onClick={this.changeShipOrientation}>Stop</button>
+        <CreatorGridController
+          grid={this.controller.getUserGrid()}
+          deploying={this.state.deploying}
+          shipLength={this.state.shipLength}
+          shipHorizontal={this.state.shipHorizontal}
+          shipPlacementEvent={this.onShipPlaceHandler}
+          clickEvent={this.onClickHandler}
+        />
+        <button onClick={this.finishDeployment} disabled={!this.state.shipsDeployed}>Finish Deployment</button>
+      </div>
+    );
   }
 }
 
 GameCreator.propTypes = {
   userID: PropTypes.string.isRequired,
-}
+};
 
 const mapStateToProps = state => ({
   userID: state.auth.uid,

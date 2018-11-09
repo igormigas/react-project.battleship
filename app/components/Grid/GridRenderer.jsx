@@ -3,20 +3,15 @@ import PropTypes from 'prop-types';
 
 import Square from './Square';
 import SquareLabel from './SquareLabel';
-import * as utils from '../../functions/grid';
+import * as utils from '../../utils/gridFunctions';
 import classes from './Grid.scss';
 
-class Grid extends React.Component {
-
-  renderGrid = (grid) => {
-    if (!grid) {
-      return null;
-    }
-    const rowsKeys = grid.getRowsKeys();
-    const colsKeys = grid.getColsKeys();
+class GridRenderer extends React.Component {
+  renderGrid = () => {
+    const { grid } = this.props;
 
     let header = [];
-    for (let i=0; i<=grid.countCols(); i++) {
+    for (let i = 0; i <= grid.countCols(); i++) {
       header.push(
         <SquareLabel key={i} value={i > 0 ? i : null} />,
       );
@@ -33,7 +28,7 @@ class Grid extends React.Component {
               key={utils.intToChar(x) + (y)}
               row={x}
               col={y}
-              type={grid.getFieldType(x,y)}
+              type={grid.getFieldType(x, y)}
               hovered={this.props.isHovered(x, y)}
               clickEvent={this.props.clickEvent}
               mouseEnterEvent={this.props.mouseEnterEvent}
@@ -44,24 +39,24 @@ class Grid extends React.Component {
       );
     });
 
-    return [header,body];
+    return [header, body];
   };
 
-	render() {
-		return (
-			<div className={classes.Grid}>
-        {this.renderGrid(this.props.gridContainer)}
+  render() {
+    return (
+      <div className={classes.Grid}>
+        {this.renderGrid()}
       </div>
-		);
-	};
+    );
+  }
 }
 
-Grid.propTypes = {
-	gridContainer: PropTypes.object,
+GridRenderer.propTypes = {
+  grid: PropTypes.object.isRequired,
+  isHovered: PropTypes.func,
   clickEvent: PropTypes.func,
-  mouseEnterEvent: PropTypes.func.isRequired,
-  mouseLeaveEvent: PropTypes.func.isRequired,
-  isHovered: PropTypes.func.isRequired,
-}
+  mouseEnterEvent: PropTypes.func,
+  mouseLeaveEvent: PropTypes.func,
+};
 
-export default Grid;
+export default GridRenderer;

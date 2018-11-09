@@ -10,12 +10,12 @@ const PlayerHud = (props) => {
       {activityStatus}
     </div>
   );
-}
+};
 
 PlayerHud.propTypes = {
-  uid: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  isActive: PropTypes.bool.isRequired,
+  uid: PropTypes.string,
+  name: PropTypes.string,
+  isActive: PropTypes.bool,
 };
 
 export default PlayerHud;

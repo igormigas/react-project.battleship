@@ -2,9 +2,9 @@ const initialState = {
   gameID: null,
   gameData: null,
   opponentID: null,
+  nextShooterID: null,
   userGrid: null,
   opponentGrid: null,
-  nextShooterID: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -13,19 +13,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gameID: action.id,
-      };
-
-    // deprecated
-    case 'STORE_USER_GRID':
-      return {
-        ...state,
-        userGrid: action.grid,
-      };
-
-    case 'STORE_OPPONENT_GRID':
-      return {
-        ...state,
-        opponentGrid: action.grid,
       };
 
     case 'STORE_OPPONENT_ID':
@@ -38,6 +25,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         nextShooterID: action.id,
+      };
+
+    case 'CLEAR_GAME_MEMORY':
+      return {
+        ...initialState,
       };
 
     default:

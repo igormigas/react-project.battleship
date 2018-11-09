@@ -8,11 +8,11 @@ import database from '../../database';
 class ActiveGames extends React.Component {
   state = {
     activeGames: [],
-  }
+  };
 
   onClickHandler = (gid) => {
     this.props.history.push('/game/' + gid);
-  }
+  };
 
   componentDidMount() {
     database.getUserActiveGames(this.props.userID, (result) => {
@@ -42,6 +42,6 @@ class ActiveGames extends React.Component {
 
 ActiveGames.propTypes = {
   userID: PropTypes.string.isRequired,
-}
+};
 
 export default withRouter(ActiveGames);

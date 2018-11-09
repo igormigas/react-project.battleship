@@ -14,6 +14,6 @@ const InviteJoin = ({ onAcceptHandler, onRefuseHandler }) => (
 InviteJoin.propTypes = {
   onAcceptHandler: PropTypes.func.isRequired,
   onRefuseHandler: PropTypes.func.isRequired,
-}
+};
 
 export default InviteJoin;

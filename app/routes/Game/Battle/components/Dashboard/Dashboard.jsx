@@ -14,7 +14,7 @@ const Dashboard = ({ gameID }) => {
       {gameID ? <Chat gameID={gameID} /> : null}
     </div>
   );
-}
+};
 
 Dashboard.propTypes = {
   gameID: PropTypes.string.isRequired,
