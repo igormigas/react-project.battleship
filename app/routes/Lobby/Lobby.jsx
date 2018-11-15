@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import ActiveGames from '../../components/ActiveGames';
+import ActiveGames from './ActiveGames';
 import Leaderboard from '../../components/Leaderboard';
 import NewGamePanel from '../../components/NewGamePanel';
 

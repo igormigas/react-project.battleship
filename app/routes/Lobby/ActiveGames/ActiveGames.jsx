@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
 import ActiveGamesItem from './ActiveGamesItem';
-import database from '../../database';
+import database from '../../../database';
 
 class ActiveGames extends React.Component {
   state = {
@@ -26,7 +26,8 @@ class ActiveGames extends React.Component {
     const items = this.state.activeGames.length ? this.state.activeGames.map(gid => (
       <ActiveGamesItem
         key={gid}
-        name={gid}
+        gid={gid}
+        playerName={'how'}
         onClickEvent={this.onClickHandler}
       />
     )) : null;
